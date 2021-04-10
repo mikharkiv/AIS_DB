@@ -1,4 +1,4 @@
-import {makeAutoObservable} from "mobx";
+import {makeAutoObservable, runInAction} from "mobx";
 
 
 export class LoginStore {
@@ -22,11 +22,20 @@ export class LoginStore {
 	}
 
 	*doLogin(login, password, callback) {
+		if (this.isLoggedIn) {
+			callback.call();
+			return;
+		}
 		this.state = "loading";
 		// TODO some login logics
 		this._loadMe();
-		this.isLoggedIn = true;
-		if (callback) callback.call();
+		runInAction(() => {
+			this.errorLoggingIn = false;
+			this.hasLoggedOut = false;
+			this.isLoggedIn = true;
+		});
+		if (callback)
+			callback.call();
 	}
 
 	*_loadMe() {
@@ -39,6 +48,9 @@ export class LoginStore {
 	*doLogout() {
 		localStorage.removeItem('token');
 		localStorage.removeItem('refresh');
+		localStorage.removeItem('login');
+		localStorage.removeItem('password');
+		localStorage.removeItem('remember');
 		this.state = "idle";
 		this.errorLoggingIn = false;
 		this.isLoggedIn = false;

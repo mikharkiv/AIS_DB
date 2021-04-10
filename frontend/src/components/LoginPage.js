@@ -2,14 +2,12 @@ import {observer} from "mobx-react";
 import {Button, Checkbox, Col, Form, Input, Row, Typography} from "antd";
 import {useStores} from "../hooks/use-stores";
 import {useEffect} from "react";
-import {useHistory, withRouter} from "react-router";
+import {Redirect} from "react-router";
 
 const {Title, Text} = Typography;
 
 const LoginPage = () => {
 	const store = useStores().loginStore;
-	const history = useHistory();
-
 	let initialData = {};
 
 	useEffect(() => {
@@ -26,15 +24,14 @@ const LoginPage = () => {
 		localStorage.setItem('login', data.login);
 		localStorage.setItem('password', data.password);
 		localStorage.setItem('remember', data.remember);
-		store.doLogin(data.login, data.password, afterLogin);
-	}
-
-	let afterLogin = () => {
-		history.replace('/');
+		store.doLogin(data.login, data.password);
 	}
 
 	return (
 		<Row style={{height: "100vh"}} align="middle" justify="center">
+			{
+				store.isLoggedIn && (<Redirect to="/" />)
+			}
 			<Col span={8}>
 				<Form onFinish={login} initialValues={initialData}>
 					<Title style={{width: "100%", textAlign: "center", marginBottom: "40px"}}>
