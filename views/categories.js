@@ -14,9 +14,9 @@ module.exports.initCategoriesViews = function(app) {
 
 	//CRUD
 
-	app.get(categoriesUrl + '/', function (req, res, next) {
+	app.get(categoriesUrl + '/', function (req, res) {
 
-		const perPage = 2;
+		const perPage = 10;
 		let count_items = 0;
 		let page = parseInt(req.params.currPage);
 		if (!page) {
@@ -28,7 +28,7 @@ module.exports.initCategoriesViews = function(app) {
 				let json = JSON.parse(string);
 				count_items = json[0].TotalCount;
 			});
-			db.categoriesDB.getCategoriesLimit(perPage, perPage * page)
+			db.categoriesDB.getCategoriesLimit(perPage, perPage * (page-1))
 				.then((r) => {
 
 					//const count_items = r.count;
@@ -56,6 +56,7 @@ module.exports.initCategoriesViews = function(app) {
 			});
 	});
 
+
 	app.post(categoriesUrl + '/', function (req, res) {
 		db.categoriesDB.addCategory(req.body.categoryName)
 			.then((r) => {
@@ -64,11 +65,16 @@ module.exports.initCategoriesViews = function(app) {
 					res.status(400).send({message: "Bad Request"});
 				} else {
 					console.log(r);
-					//serialise
-					res.send(JSON.stringify(r));
+					db.categoriesDB.getById(r.insertId)
+						.then((rr) => {
+							console.log(rr);
+							//serialise
+							res.send(JSON.stringify(rr));
+						});
 				}
 			});
 	});
+
 
 	app.put(categoriesUrl + '/', function (req, res) {
 		db.categoriesDB.updateCategory(req.body.categoryName, req.body.categoryId)
@@ -77,11 +83,16 @@ module.exports.initCategoriesViews = function(app) {
 					res.status(400).send({message: "Bad Request"});
 				} else {
 					console.log(r);
-					//serialise
-					res.send(JSON.stringify(r));
+					db.categoriesDB.getById(req.body.categoryId)
+						.then((rr) => {
+							console.log(rr);
+							//serialise
+							res.send(JSON.stringify(rr));
+						});
 				}
 			});
 	});
+
 
 	app.delete(categoriesUrl + '/:categoryId', function (req, res) {
 		db.categoriesDB.deleteById(req.params.categoryId)

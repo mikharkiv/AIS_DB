@@ -11,6 +11,26 @@ const queryEmployeesWorkwithPetrenko = "SELECT empl_surname, empl_name, empl_pat
 const queryEmployeesWorkwithBiggestPercentByCity = "SELECT city, COUNT(*) AS count_employees FROM employee WHERE id_employee IN ( SELECT id_employee FROM `check` WHERE card_number IN ( SELECT card_number FROM customer_card WHERE percent IN ( SELECT MAX(percent) FROM customer_card ) ) ) GROUP BY city;";
 const queryEmployeesOnlyWorkwithPetrenko = "SELECT empl_name, empl_surname, empl_patronymic FROM employee WHERE id_employee IN ( SELECT id_employee FROM employee WHERE NOT EXISTS( SELECT id_employee FROM `check` C WHERE C.id_employee = employee.id_employee AND card_number NOT IN ( SELECT card_number FROM customer_card WHERE cust_surname = \"Petrenko\" ) ) );";
 
+
+//CRUD
+const getEmployeesLimitSQL = "SELECT * FROM supermarket.Employee LIMIT #LIMIT# OFFSET #OFFSET#;";
+
+const getEmployeesLimitSearchSQL = "SELECT * FROM supermarket.Employee WHERE empl_name LIKE '%#SEARCH#%' OR empl_surname LIKE '%#SEARCH#%' LIMIT #LIMIT# OFFSET #OFFSET#;";
+
+const getAllCountSQL = "SELECT COUNT(*) AS TotalCount FROM supermarket.Employee;";
+
+const deleteByIdSQL = "DELETE FROM employee WHERE id_employee=#PID_VAR#;";
+
+const getByIdSQL = "SELECT * FROM employee WHERE id_employee=#PID_VAR#;";
+
+const addEmployeeSQL = "INSERT INTO SuperMarket.Employee (id_employee, empl_surname, empl_name, empl_patronymic, role, salary, date_of_birth, date_of_start, phone_number, city, street, zip_code) " +
+	"VALUES (";
+	//"#id#,#sur#,#name#,#patr#,#role#,#salary#,#birth#,#start#,#phone#,#city#,#street#,#zip#);";
+
+const alreadyExistsSQL = "SELECT * FROM supermarket.Employee WHERE id_employee = #ID#;";
+
+const updateEmployeeSQL = "UPDATE supermarket.Employee SET #PARAMS# WHERE id_employee = '#ID#';";
+
 module.exports.EmployeesDB = class {
 	query;
 
@@ -45,5 +65,43 @@ module.exports.EmployeesDB = class {
 
 	getEmployeesWorkedWithBiggestPercentByCity() {
 		return this.query(queryEmployeesWorkwithBiggestPercentByCity);
+	}
+
+
+	//CRUD
+	getAllEmployees() {
+		return this.query('SELECT * FROM Employee;');
+	}
+
+	getEmployeesLimit(limit, offset){
+		return this.query(getEmployeesLimitSQL.replace('#LIMIT#', limit).replace('#OFFSET#', offset));
+	}
+
+	getEmployeesLimitSearch(limit, offset, search_query){
+		return this.query(getEmployeesLimitSearchSQL.replace('#LIMIT#', limit).replace('#OFFSET#', offset).replace('#SEARCH#', search_query).replace('#SEARCH#', search_query));
+	}
+
+	getAllCount() {
+		return this.query(getAllCountSQL);
+	}
+
+	getById(employeeId) {
+		return this.query(getByIdSQL.replace('#PID_VAR#', employeeId));
+	}
+
+	addEmployee(id_employee, empl_surname, empl_name, empl_patronymic, role, salary, date_of_birth, date_of_start, phone_number, city, street, zip_code){
+		return this.query(addEmployeeSQL+"'"+id_employee+"','"+empl_surname+"','"+empl_name+"','"+empl_patronymic+"','"+role +"',"+salary+",'"+date_of_birth+"','"+date_of_start+"','"+phone_number+"','"+city+"','"+street+"','"+zip_code+"');");
+	}
+
+	alreadyExists(employeeId){
+		return this.query(alreadyExistsSQL.replace('#ID#', employeeId));
+	}
+
+	updateEmployee(strParams, employeeId){
+		return this.query(updateEmployeeSQL.replace('#PARAMS#', strParams).replace('#ID#', employeeId));
+	}
+
+	deleteById(employeeId) {
+		return this.query(deleteByIdSQL.replace('#PID_VAR#', employeeId));
 	}
 }
