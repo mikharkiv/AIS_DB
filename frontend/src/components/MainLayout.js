@@ -14,6 +14,7 @@ import {useRouteMatch} from "react-router-dom";
 import {observer} from "mobx-react";
 import {useHistory} from "react-router";
 import {useStores} from "../hooks/use-stores";
+import CardsPage from "./cards/CardsPage";
 
 const { Content, Sider } = Layout;
 
@@ -69,7 +70,7 @@ const MainLayout = () => {
 						{/* Receipts */}
 						<Route path={`${path}${purePaths[5]}`} component={null}/>
 						{/* Cards */}
-						<Route path={`${path}${purePaths[6]}`} component={null}/>
+						<Route path={`${purePaths[6]}`} component={CardsPage}/>
 					</Switch>
 				</div>
 			</Content>

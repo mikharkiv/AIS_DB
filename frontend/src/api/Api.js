@@ -1,5 +1,5 @@
 import {runInAction} from "mobx";
-import {globalStores} from "../contexts";
+import {globalStores} from "../hooks/contexts";
 
 export class Api {
 	static mainUrl = 'http://localhost:8000/';
