@@ -1,7 +1,5 @@
 import {observer} from "mobx-react";
 import {Table} from "antd";
-import {CardsAPI} from "../../api/CardsAPI";
-import {useEffect} from "react";
 
 const CardsList = (props) => {
 	return (

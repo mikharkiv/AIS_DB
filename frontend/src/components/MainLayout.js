@@ -15,6 +15,7 @@ import {observer} from "mobx-react";
 import {useHistory} from "react-router";
 import {useStores} from "../hooks/use-stores";
 import CardsPage from "./cards/CardsPage";
+import CategoriesPage from "./categories/CategoriesPage";
 
 const { Content, Sider } = Layout;
 
@@ -41,9 +42,9 @@ const MainLayout = () => {
 				}>
 					<Menu.Item key="0" icon={<HomeOutlined/>}>Головна</Menu.Item>
 					<Menu.Item key="1" icon={<UserOutlined/>}>Працівники</Menu.Item>
-					<Menu.Item key="3" icon={<AppstoreOutlined/>}>Товари</Menu.Item>
-					<Menu.Item key="4" icon={<CarryOutOutlined/>}>Товари в магазині</Menu.Item>
-					<Menu.Item key="2" icon={<ContactsOutlined/>}>Категорії</Menu.Item>
+					<Menu.Item key="2" icon={<AppstoreOutlined/>}>Товари</Menu.Item>
+					<Menu.Item key="3" icon={<CarryOutOutlined/>}>Товари в магазині</Menu.Item>
+					<Menu.Item key="4" icon={<ContactsOutlined/>}>Категорії</Menu.Item>
 					<Menu.Item key="5" icon={<TeamOutlined/>}>Чек</Menu.Item>
 					<Menu.Item key="6" icon={<FileOutlined/>}>Карти клієнтів</Menu.Item>
 					<Menu.Item key="7" icon={<LogoutOutlined/>}>Вийти</Menu.Item>
@@ -66,7 +67,7 @@ const MainLayout = () => {
 						{/* Shop goods */}
 						<Route path={`${path}${purePaths[3]}`} component={null}/>
 						{/* Categories */}
-						<Route path={`${path}${purePaths[4]}`} component={null}/>
+						<Route path={`${purePaths[4]}`} component={CategoriesPage}/>
 						{/* Receipts */}
 						<Route path={`${path}${purePaths[5]}`} component={null}/>
 						{/* Cards */}
