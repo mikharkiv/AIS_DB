@@ -34,6 +34,7 @@ export class CardsAPI {
 		await CardsAPI.removeCard(id);
 		card.card_number = id;
 		this._cards.push(card);
+		console.log(this._cards);
 	}
 
 	static buildCard(num, surname, name, patronymic, phone, city, street, zip, percent) {

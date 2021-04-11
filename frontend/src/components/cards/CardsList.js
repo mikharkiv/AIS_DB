@@ -3,7 +3,12 @@ import {Table} from "antd";
 
 const CardsList = (props) => {
 	return (
-		<Table dataSource={props.data} pagination={false}>
+		<Table dataSource={props.data} pagination={false}
+			onRow={(record, rowIndex) => {
+				return {
+					onClick: event => props.onEdit(record.card_number)
+				};
+			}}>
 			<Table.Column dataIndex="card_number" title="#" sorter=
 				{(a,b) => a.card_number > b.card_number}/>
 			<Table.Column dataIndex="cust_surname" title="Прізвище" sorter=
