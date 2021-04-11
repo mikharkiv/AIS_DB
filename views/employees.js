@@ -1,7 +1,11 @@
 const db = require("../db/DB");
 const employeesUrl = "/employees";
 
+const moment = require("moment");
+
 const auth_token = require("./auth_midd");
+
+const data_parse = require("./utility");
 
 module.exports.initEmployeesViews = function (app) {
 	app.get(employeesUrl + '/item-sold-count/:itemId', function (req, res) {
@@ -39,17 +43,29 @@ module.exports.initEmployeesViews = function (app) {
 		if (!page) {
 			page = 1;
 		}
-		db.employeesDB.getAllCount()
-			.then((r) => {
-				let string = JSON.stringify(r);
-				let json = JSON.parse(string);
-				count_items = json[0].TotalCount;
-			});
+		if (!req.body.searchQuery) {
+			db.employeesDB.getAllCount()
+				.then((r) => {
+					let string = JSON.stringify(r);
+					let json = JSON.parse(string);
+					count_items = json[0].TotalCount;
+				});
+		}else{
+			db.employeesDB.getAllCountSearch(req.body.searchQuery)
+				.then((r) => {
+					let string = JSON.stringify(r);
+					let json = JSON.parse(string);
+					count_items = json[0].TotalCount;
+				});
+		}
 		if (!req.body.searchQuery) {
 			db.employeesDB.getEmployeesLimit(perPage, perPage * (page - 1))
 				.then((r) => {
 					const total_pages = Math.ceil(count_items / perPage);
-					const results = r;
+					if(count_items>perPage){
+						count_items = count_items - perPage * (page - 1);
+					}
+					const results = data_parse.changeDateEmployeeArray(r);
 					res.json({
 						"total_pages": total_pages,
 						"count_items": count_items,
@@ -60,7 +76,10 @@ module.exports.initEmployeesViews = function (app) {
 			db.employeesDB.getEmployeesLimitSearch(perPage, perPage * (page - 1), req.body.searchQuery)
 				.then((r) => {
 					const total_pages = Math.ceil(count_items / perPage);
-					const results = r;
+					if(count_items>perPage){
+						count_items = count_items - perPage * (page - 1);
+					}
+					const results = data_parse.changeDateEmployeeArray(r);
 					res.json({
 						"total_pages": total_pages,
 						"count_items": count_items,
@@ -76,7 +95,8 @@ module.exports.initEmployeesViews = function (app) {
 			.then((r) => {
 				if (r.length) {
 					console.log(r);
-					res.send(JSON.stringify(r));
+					let changed_r = data_parse.changeDateEmployee(r);
+					res.send(changed_r);
 				} else {
 					res.status(400).send({message: "Bad Request"});
 				}});
