@@ -19,17 +19,16 @@ const getEmployeesLimitSearchSQL = "SELECT * FROM supermarket.Employee WHERE emp
 
 const getAllCountSQL = "SELECT COUNT(*) AS TotalCount FROM supermarket.Employee;";
 
+const getAllCountByIDSQL = "SELECT COUNT(*) AS TotalCount FROM supermarket.Employee WHERE id_employee=#PID_VAR#;";
+
 const getAllCountSearchSQL = "SELECT COUNT(*) AS TotalCount FROM supermarket.Employee WHERE empl_name LIKE '%#SEARCH#%' OR empl_surname LIKE '%#SEARCH#%';";
 
 const deleteByIdSQL = "DELETE FROM employee WHERE id_employee=#PID_VAR#;";
 
 const getByIdSQL = "SELECT * FROM employee WHERE id_employee=#PID_VAR#;";
 
-const addEmployeeSQL = "INSERT INTO SuperMarket.Employee (id_employee, empl_surname, empl_name, empl_patronymic, role, salary, date_of_birth, date_of_start, phone_number, city, street, zip_code) " +
+const addEmployeeSQL = "INSERT INTO SuperMarket.Employee (id_employee, empl_surname, empl_name, empl_patronymic, role, salary, date_of_birth, date_of_start, phone_number, city, street, zip_code, password) " +
 	"VALUES (";
-	//"#id#,#sur#,#name#,#patr#,#role#,#salary#,#birth#,#start#,#phone#,#city#,#street#,#zip#);";
-
-const alreadyExistsSQL = "SELECT * FROM supermarket.Employee WHERE id_employee = #ID#;";
 
 const updateEmployeeSQL = "UPDATE supermarket.Employee SET #PARAMS# WHERE id_employee = '#ID#';";
 
@@ -99,13 +98,14 @@ module.exports.EmployeesDB = class {
 		return this.query(getByIdSQL.replace('#PID_VAR#', employeeId));
 	}
 
-	addEmployee(id_employee, empl_surname, empl_name, empl_patronymic, role, salary, date_of_birth, date_of_start, phone_number, city, street, zip_code){
-		return this.query(addEmployeeSQL+"'"+id_employee+"','"+empl_surname+"','"+empl_name+"','"+empl_patronymic+"','"+role +"',"+salary+",'"+date_of_birth+"','"+date_of_start+"','"+phone_number+"','"+city+"','"+street+"','"+zip_code+"');");
+	getAllCountByID(employeeId) {
+		return this.query(getAllCountByIDSQL.replace('#PID_VAR#', employeeId));
 	}
 
-	alreadyExists(employeeId){
-		return this.query(alreadyExistsSQL.replace('#ID#', employeeId));
+	addEmployee(id_employee, empl_surname, empl_name, empl_patronymic, role, salary, date_of_birth, date_of_start, phone_number, city, street, zip_code, password){
+		return this.query(addEmployeeSQL+"'"+id_employee+"','"+empl_surname+"','"+empl_name+"','"+empl_patronymic+"','"+role +"',"+salary+",'"+date_of_birth+"','"+date_of_start+"','"+phone_number+"','"+city+"','"+street+"','"+zip_code+"','"+password+"');");
 	}
+
 
 	updateEmployee(strParams, employeeId){
 		return this.query(updateEmployeeSQL.replace('#PARAMS#', strParams).replace('#ID#', employeeId));

@@ -2,10 +2,11 @@ const db = require("../db/DB");
 const employeesUrl = "/employees";
 
 const moment = require("moment");
-
 const auth_token = require("./auth_midd");
-
 const data_parse = require("./utility");
+
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
 
 module.exports.initEmployeesViews = function (app) {
 	app.get(employeesUrl + '/item-sold-count/:itemId', function (req, res) {
@@ -105,13 +106,17 @@ module.exports.initEmployeesViews = function (app) {
 
 	app.post(employeesUrl + '/', auth_token.authManager, function (req, res) {
 		//check if we try to dublicate PK id_employee
-		db.employeesDB.alreadyExists(req.body.id_employee)
+		db.employeesDB.getAllCountByID(req.body.id_employee)
 			.then((r) => {
-				if (r) {
+				let string = JSON.stringify(r);
+				let json = JSON.parse(string);
+				count_items = json[0].TotalCount;
+				console.log(count_items)
+				if (count_items!=0) {
 					res.status(400).send({message: "Bad Request"});
 				} else {
-
-					db.employeesDB.addEmployee(req.body.id_employee, req.body.empl_surname, req.body.empl_name, req.body.empl_patronymic, req.body.role, req.body.salary, req.body.date_of_birth, req.body.date_of_start, req.body.phone_number, req.body.city, req.body.street, req.body.zip_code)
+					let crypt_pass = bcrypt.hashSync(req.body.password, saltRounds);
+					db.employeesDB.addEmployee(req.body.id_employee, req.body.empl_surname, req.body.empl_name, req.body.empl_patronymic, req.body.role, req.body.salary, req.body.date_of_birth, req.body.date_of_start, req.body.phone_number, req.body.city, req.body.street, req.body.zip_code, crypt_pass)
 						.then((r) => {
 							if (!r.affectedRows) {
 								res.status(400).send({message: "Bad Request"});
@@ -130,7 +135,7 @@ module.exports.initEmployeesViews = function (app) {
 	app.put(employeesUrl + '/:employeeId', auth_token.authManager, function (req, res) {
 		let json = JSON.parse(JSON.stringify(req.body));
 
-		let attribute_arr = ["id_employee", "empl_surname", "empl_name", "empl_patronymic", "role", "salary", "date_of_birth", "date_of_start", "phone_number", "city", "street", "zip_code"];
+		let attribute_arr = ["id_employee", "empl_surname", "empl_name", "empl_patronymic", "role", "salary", "date_of_birth", "date_of_start", "phone_number", "city", "street", "zip_code", "password"];
 
 		let query_part = [];
 		for (let key of attribute_arr){
@@ -141,7 +146,7 @@ module.exports.initEmployeesViews = function (app) {
 		let query = query_part.join(", ");
 		console.log(query);
 
-		db.employeesDB.updateEmployee(query, auth_token.authManager, req.params.employeeId)
+		db.employeesDB.updateEmployee(query, req.params.employeeId)
 			.then((r) => {
 				if (!r.affectedRows) {
 					res.status(400).send({message: "Bad Request"});
