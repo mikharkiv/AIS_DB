@@ -18,6 +18,7 @@ import CardsPage from "./cards/CardsPage";
 import CategoriesPage from "./categories/CategoriesPage";
 import GoodsPage from "./goods/GoodsPage";
 import EmployeesPage from "./employees/EmployeesPage";
+import ShopGoodsPage from "./shop-goods/ShopGoodsPage";
 
 const { Content, Sider } = Layout;
 
@@ -67,7 +68,7 @@ const MainLayout = () => {
 						{/* Goods */}
 						<Route path={`${purePaths[2]}`} component={GoodsPage}/>
 						{/* Shop goods */}
-						<Route path={`${path}${purePaths[3]}`} component={null}/>
+						<Route path={`${purePaths[3]}`} component={ShopGoodsPage}/>
 						{/* Categories */}
 						<Route path={`${purePaths[4]}`} component={CategoriesPage}/>
 						{/* Receipts */}
