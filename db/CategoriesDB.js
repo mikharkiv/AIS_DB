@@ -31,7 +31,6 @@ module.exports.CategoriesDB = class {
 
 
 	//CRUD
-
 	getAllCategories() {
 		return this.query(getAllCategoriesSQL);
 	}

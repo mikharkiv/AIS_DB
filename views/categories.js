@@ -15,9 +15,7 @@ module.exports.initCategoriesViews = function(app) {
 
 
 	//CRUD
-
 	app.get(categoriesUrl + '/', auth_token.authManager, function (req, res) {
-
 		const perPage = 10;
 		let count_items = 0;
 		let page = parseInt(req.params.currPage);
@@ -32,8 +30,6 @@ module.exports.initCategoriesViews = function(app) {
 			});
 		db.categoriesDB.getCategoriesLimit(perPage, perPage * (page - 1))
 			.then((r) => {
-
-				//const count_items = r.count;
 				const total_pages = Math.ceil(count_items / perPage);
 				const results = r;
 				res.json({
@@ -50,7 +46,6 @@ module.exports.initCategoriesViews = function(app) {
 			.then((r) => {
 				if (r.length) {
 					console.log(r);
-					//serialise
 					res.send(JSON.stringify(r));
 				} else {
 					res.status(400).send({message: "Bad Request"});
@@ -70,7 +65,6 @@ module.exports.initCategoriesViews = function(app) {
 					db.categoriesDB.getById(r.insertId)
 						.then((rr) => {
 							console.log(rr);
-							//serialise
 							res.send(JSON.stringify(rr));
 						});
 				}
@@ -88,7 +82,6 @@ module.exports.initCategoriesViews = function(app) {
 					db.categoriesDB.getById(req.body.categoryId)
 						.then((rr) => {
 							console.log(rr);
-							//serialise
 							res.send(JSON.stringify(rr));
 						});
 				}

@@ -85,11 +85,9 @@ module.exports.initClientsViews = function(app) {
 				let string = JSON.stringify(r);
 				let json = JSON.parse(string);
 				count_items = json[0].TotalCount;
-				console.log(count_items)
 				if (count_items!=0) {
 					res.status(400).send({message: "Bad Request"});
 				} else {
-					console.log("else")
 					db.clientsDB.addClient(req.body.card_number, req.body.cust_surname, req.body.cust_name, req.body.cust_patronymic, req.body.phone_number, req.body.city, req.body.street, req.body.zip_code, req.body.percent)
 						.then((r) => {
 							if (!r.affectedRows) {
