@@ -3,9 +3,14 @@ import {Table} from "antd";
 
 const EmployeesList = (props) => {
 	return (
-		<Table dataSource={props.data} pagination={false} size="small">
+		<Table dataSource={props.data} pagination={false} size="small"
+			onRow={(record, rowIndex) => {
+				return {
+					onClick: event => props.onEdit(record.id_employee)
+				};
+			}}>
 			<Table.Column dataIndex="id_employee" title="#" sorter=
-				{(a,b) => a.id_employee > b.id_employee}/>
+				{(a,b) => a.id_employee - b.id_employee}/>
 			<Table.Column dataIndex="empl_surname" title="Прізвище" sorter=
 				{(a,b) => a.empl_surname.toLowerCase().localeCompare(b.empl_surname.toLowerCase())}/>
 			<Table.Column dataIndex="empl_name" title="Ім'я" sorter=
@@ -15,7 +20,7 @@ const EmployeesList = (props) => {
 			<Table.Column dataIndex="role" title="Посада" sorter=
 				{(a,b) => a.role.toLowerCase().localeCompare(b.role.toLowerCase())}/>
 			<Table.Column dataIndex="salary" title="ЗП" sorter=
-				{(a,b) => a.salary > b.salary}/>
+				{(a,b) => a.salary - b.salary}/>
 			<Table.Column dataIndex="date_of_birth" title="Дата нар." sorter=
 				{(a,b) => a.date_of_birth.toLowerCase().localeCompare(b.date_of_birth.toLowerCase())}/>
 			<Table.Column dataIndex="date_of_start" title="Дата поч." sorter=

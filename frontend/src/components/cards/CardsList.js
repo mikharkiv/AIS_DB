@@ -10,7 +10,7 @@ const CardsList = (props) => {
 				};
 			}}>
 			<Table.Column dataIndex="card_number" title="#" sorter=
-				{(a,b) => a.card_number > b.card_number}/>
+				{(a,b) => a.card_number - b.card_number}/>
 			<Table.Column dataIndex="cust_surname" title="Прізвище" sorter=
 				{(a,b) => a.cust_surname.toLowerCase().localeCompare(b.cust_surname.toLowerCase())}/>
 			<Table.Column dataIndex="cust_name" title="Ім'я" sorter=
@@ -26,7 +26,7 @@ const CardsList = (props) => {
 			<Table.Column dataIndex="zip_code" title="Індекс" sorter=
 				{(a,b) => a.zip_code.toLowerCase().localeCompare(b.zip_code.toLowerCase())}/>
 			<Table.Column dataIndex="percent" title="% знижки" sorter=
-				{(a,b) => a.percent > b.percent}/>
+				{(a,b) => a.percent - b.percent}/>
 		</Table>
 	);
 }
