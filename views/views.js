@@ -3,6 +3,7 @@ const {initEmployeesViews} = require("./employees");
 const {initProductsViews} = require("./products");
 const {initStoreProductsViews} = require("./store_products");
 const {initCategoriesViews} = require("./categories");
+const {initReceiptsViews} = require("./receipts");
 const {initAuthViews} = require("./auth");
 
 module.exports.initViews = function (app) {
@@ -11,6 +12,7 @@ module.exports.initViews = function (app) {
 	initProductsViews(app);
 	initStoreProductsViews(app);
 	initCategoriesViews(app);
+	initReceiptsViews(app);
 	initAuthViews(app);
 	console.log('All views inited');
 }

@@ -9,7 +9,7 @@ const getStoreProductsLimitSQL = "SELECT * FROM Store_Product LIMIT #LIMIT# OFFS
 
 const getByIdSQL = "SELECT * FROM Store_Product WHERE UPC=#PID_VAR#;";
 
-const addStoreProduct = "INSERT INTO Store_Product (UPC, UPC_prom, id_product, selling_price, products_number, promotional_product) " +
+const addStoreProductSQL = "INSERT INTO Store_Product (UPC, UPC_prom, id_product, selling_price, products_number, promotional_product) " +
 "VALUES (";
 
 const updateClientSQL = "UPDATE Store_Product SET #PARAMS# WHERE UPC = '#ID#';";
@@ -49,9 +49,9 @@ module.exports.StoreProductsDB = class {
 	getAllCountByID(upc){
 		return this.query(getAllCountByIdSQL.replace('#PID_VAR#', upc));
 	}
-	//UPC, UPC_prom, id_product, selling_price, products_number, promotional_product
+
 	addStoreProduct(UPC, UPC_prom, id_product, selling_price, products_number, promotional_product){
-		return this.query(addStoreProduct+"'"+UPC+"','"+UPC_prom+"','"+id_product+"','"+selling_price+"','"+products_number+"','"+promotional_product+"');");
+		return this.query(addStoreProductSQL+"'"+UPC+"','"+UPC_prom+"','"+id_product+"','"+selling_price+"','"+products_number+"','"+promotional_product+"');");
 	}
 
 	updateStoreProduct(query, upc){
