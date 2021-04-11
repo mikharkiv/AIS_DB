@@ -17,6 +17,7 @@ import {useStores} from "../hooks/use-stores";
 import CardsPage from "./cards/CardsPage";
 import CategoriesPage from "./categories/CategoriesPage";
 import GoodsPage from "./goods/GoodsPage";
+import EmployeesPage from "./employees/EmployeesPage";
 
 const { Content, Sider } = Layout;
 
@@ -62,7 +63,7 @@ const MainLayout = () => {
 						{/* Home */}
 						<Route path={`${path}${purePaths[0]}`} component={null}/>
 						{/* Employees */}
-						<Route path={`${path}${purePaths[1]}`} component={null}/>
+						<Route path={`${purePaths[1]}`} component={EmployeesPage}/>
 						{/* Goods */}
 						<Route path={`${purePaths[2]}`} component={GoodsPage}/>
 						{/* Shop goods */}

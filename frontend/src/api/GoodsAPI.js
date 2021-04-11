@@ -23,7 +23,7 @@ export class GoodsAPI {
 
 	static async addGood(good) {
 		let greatestId = this._goods.reduce((p,c) => Math.max(p, c.id_product), 0);
-		good.good_number = greatestId + 1;
+		good.id_product = greatestId + 1;
 		this._goods.push(good);
 	}
 
@@ -33,7 +33,7 @@ export class GoodsAPI {
 
 	static async updateGood(id, good) {
 		await GoodsAPI.removeGood(id);
-		good.good_number = id;
+		good.id_product = id;
 		this._goods.push(good);
 	}
 
