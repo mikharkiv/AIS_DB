@@ -31,7 +31,7 @@ const alreadyExistsSQL = "SELECT * FROM supermarket.Employee WHERE id_employee =
 
 const updateEmployeeSQL = "UPDATE supermarket.Employee SET #PARAMS# WHERE id_employee = '#ID#';";
 
-const isManagerSQL = "SELECT * FROM employee WHERE id_employee=#PID_VAR# AND role='manager';"
+const getRoleSQL = "SELECT role FROM employee WHERE id_employee=#PID_VAR#;"
 
 module.exports.EmployeesDB = class {
 	query;
@@ -108,7 +108,7 @@ module.exports.EmployeesDB = class {
 	}
 
 	//auth
-	isManager(employeeId) {
-		return this.query(isManagerSQL.replace('#PID_VAR#', employeeId));
+	getRole(employeeId) {
+		return this.query(getRoleSQL.replace('#PID_VAR#', employeeId));
 	}
 }

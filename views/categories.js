@@ -97,17 +97,24 @@ module.exports.initCategoriesViews = function(app) {
 
 
 	app.delete(categoriesUrl + '/:categoryId', auth_token.authManager, function (req, res) {
-
-		db.categoriesDB.deleteById(req.params.categoryId)
+		//check if exists any item of this category
+		db.categoriesDB.existsItem(req.params.categoryId)
 			.then((r) => {
-				if (!r.affectedRows) {
+				if(r)
 					res.status(400).send({message: "Bad Request"});
-				} else {
-					res.status(200).send({message: "OK"});
+				else {
+					db.categoriesDB.deleteById(req.params.categoryId)
+						.then((r) => {
+							if (!r.affectedRows) {
+								res.status(400).send({message: "Bad Request"});
+							} else {
+								res.status(200).send({message: "OK"});
+							}
+						})
+						.catch((error) => {
+							res.status(400).send({message: "Bad Request"});
+						});
 				}
-			})
-			.catch(function (err) {
-				res.status(400).send({message: "Bad Request"});
 			});
 	});
 }

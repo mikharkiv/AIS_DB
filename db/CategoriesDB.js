@@ -15,6 +15,8 @@ const updateCategorySQL = "UPDATE supermarket.category SET category_name = '#NAM
 
 const deleteByIdSQL = "DELETE FROM supermarket.category WHERE category_number =#PID_VAR#;";
 
+const existsItemSQL = "SELECT * FROM supermarket.product WHERE category_number =#PID_VAR#;";
+
 module.exports.CategoriesDB = class {
 	query;
 
@@ -56,5 +58,9 @@ module.exports.CategoriesDB = class {
 
 	deleteById(categoryId) {
 		return this.query(deleteByIdSQL.replace('#PID_VAR#', categoryId));
+	}
+
+	existsItem(categoryId) {
+		return this.query(existsItemSQL.replace('#PID_VAR#', categoryId));
 	}
 }
