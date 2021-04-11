@@ -38,10 +38,31 @@ module.exports.initAuthViews = function(app) {
 				}});
 	});
 
-	//get /me
 
+	app.get('/me', function (req, res) {
+		const authHeader = req.headers['authorization']
+		const token = authHeader && authHeader.split(' ')[1]
+		console.log(token); //
+		if (token == null) {
+			return res.status(401).send({message: "Unauthorized"});
+		}
+
+		jwt.verify(token, ACCESS_TOKEN_SECRET, (err, user) => {
+			if (err) {
+				console.log(err);
+				return res.status(401).send({message: "Unauthorized"});
+			}
+			req.user = user;
+			console.log(user);
+			db.employeesDB.getIDPIBRole(user.id)
+				.then((r) => {
+					console.log(r);
+					res.send(JSON.stringify(r));
+				});
+		})
+	});
 	function generateAccessToken(user) {
-		return jwt.sign(user, ACCESS_TOKEN_SECRET, {expiresIn: '10m'})
+		return jwt.sign(user, ACCESS_TOKEN_SECRET, {expiresIn: '30m'})
 	}
 }
 

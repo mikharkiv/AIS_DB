@@ -19,6 +19,8 @@ const getEmployeesLimitSearchSQL = "SELECT * FROM supermarket.Employee WHERE emp
 
 const getAllCountSQL = "SELECT COUNT(*) AS TotalCount FROM supermarket.Employee;";
 
+const getAllCountSearchSQL = "SELECT COUNT(*) AS TotalCount FROM supermarket.Employee WHERE empl_name LIKE '%#SEARCH#%' OR empl_surname LIKE '%#SEARCH#%';";
+
 const deleteByIdSQL = "DELETE FROM employee WHERE id_employee=#PID_VAR#;";
 
 const getByIdSQL = "SELECT * FROM employee WHERE id_employee=#PID_VAR#;";
@@ -31,7 +33,9 @@ const alreadyExistsSQL = "SELECT * FROM supermarket.Employee WHERE id_employee =
 
 const updateEmployeeSQL = "UPDATE supermarket.Employee SET #PARAMS# WHERE id_employee = '#ID#';";
 
+//auth
 const getRoleSQL = "SELECT role FROM employee WHERE id_employee=#PID_VAR#;"
+const getIDPIBRoleSQL = "SELECT id_employee, empl_surname, empl_name, empl_patronymic, role FROM employee WHERE id_employee=#PID_VAR#;"
 
 module.exports.EmployeesDB = class {
 	query;
@@ -87,6 +91,10 @@ module.exports.EmployeesDB = class {
 		return this.query(getAllCountSQL);
 	}
 
+	getAllCountSearch(search_query) {
+		return this.query(getAllCountSearchSQL.replace('#SEARCH#', search_query).replace('#SEARCH#', search_query));
+	}
+
 	getById(employeeId) {
 		return this.query(getByIdSQL.replace('#PID_VAR#', employeeId));
 	}
@@ -110,5 +118,9 @@ module.exports.EmployeesDB = class {
 	//auth
 	getRole(employeeId) {
 		return this.query(getRoleSQL.replace('#PID_VAR#', employeeId));
+	}
+
+	getIDPIBRole(employeeId) {
+		return this.query(getIDPIBRoleSQL.replace('#PID_VAR#', employeeId));
 	}
 }
