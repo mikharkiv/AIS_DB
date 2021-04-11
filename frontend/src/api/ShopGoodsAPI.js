@@ -1,5 +1,6 @@
 import {Api} from "./Api";
 import {GoodsAPI} from "./GoodsAPI";
+import {CategoriesAPI} from "./CategoriesAPI";
 
 // TODO bind with backend
 export class ShopGoodsAPI {
@@ -19,12 +20,18 @@ export class ShopGoodsAPI {
 	}
 
 	static async getShopGood(id) {
-		return this._shopgoods.find((e) => e.upc === id);
+		return this._shopgoods.find((e) => e.upc == id);
 	}
 
 	static async addShopGood(shopgood) {
+		console.log(shopgood);
 		let greatestId = this._shopgoods.reduce((p,c) => Math.max(p, c.upc), 0);
 		shopgood.upc = greatestId + 1;
+		if (typeof shopgood.id_product !== 'object')
+			shopgood.id_product = await GoodsAPI.getGood(shopgood.id_product);
+		if (typeof shopgood.upc_prom !== 'object')
+			shopgood.upc_prom = await ShopGoodsAPI.getShopGood(shopgood.upc_prom);
+		console.log(shopgood);
 		this._shopgoods.push(shopgood);
 	}
 
@@ -35,6 +42,10 @@ export class ShopGoodsAPI {
 	static async updateShopGood(id, shopgood) {
 		await ShopGoodsAPI.removeShopGood(id);
 		shopgood.upc = id;
+		if (typeof shopgood.id_product !== 'object')
+			shopgood.id_product = await GoodsAPI.getGood(shopgood.id_product);
+		if (typeof shopgood.upc_prom !== 'object')
+			shopgood.upc_prom = await ShopGoodsAPI.getShopGood(shopgood.upc_prom);
 		this._shopgoods.push(shopgood);
 	}
 

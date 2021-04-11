@@ -17,7 +17,7 @@ export class CardsAPI {
 	}
 
 	static async getCard(id) {
-		return this._cards.find((e) => e.card_number === id);
+		return this._cards.find((e) => e.card_number == id);
 	}
 
 	static async addCard(card) {

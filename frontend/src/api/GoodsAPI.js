@@ -18,7 +18,7 @@ export class GoodsAPI {
 	}
 
 	static async getGood(id) {
-		return this._goods.find((e) => e.id_product === id);
+		return this._goods.find((e) => e.id_product == id);
 	}
 
 	static async addGood(good) {

@@ -20,7 +20,7 @@ export class ReceiptsAPI {
 	}
 
 	static async getReceipt(id) {
-		return this._receipts.find((e) => e.check_number === id);
+		return this._receipts.find((e) => e.check_number == id);
 	}
 
 	static async addReceipt(receipt) {

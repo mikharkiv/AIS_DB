@@ -27,7 +27,7 @@ export class EmployeesAPI {
 	}
 
 	static async getEmployee(id) {
-		return this._employees.find((e) => e.id_employee === id);
+		return this._employees.find((e) => e.id_employee == id);
 	}
 
 	static async addEmployee(employee) {
