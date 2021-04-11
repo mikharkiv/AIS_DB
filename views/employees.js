@@ -1,6 +1,8 @@
 const db = require("../db/DB");
 const employeesUrl = "/employees";
 
+const auth_token = require("./auth_midd");
+
 module.exports.initEmployeesViews = function (app) {
 	app.get(employeesUrl + '/item-sold-count/:itemId', function (req, res) {
 		db.employeesDB.getSoldItemCount(req.params.itemId).then((r) => res.send(JSON.stringify(r)));
@@ -30,7 +32,7 @@ module.exports.initEmployeesViews = function (app) {
 
 
 	//CRUD
-	app.get(employeesUrl + '/', function (req, res) {
+	app.get(employeesUrl + '/', auth_token.authManager, function (req, res) {
 		const perPage = 10;
 		let count_items = 0;
 		let page = parseInt(req.body.currPage);
@@ -69,12 +71,11 @@ module.exports.initEmployeesViews = function (app) {
 	});
 
 
-	app.get(employeesUrl + '/:employeeId', function (req, res) {
+	app.get(employeesUrl + '/:employeeId', auth_token.authManager, function (req, res) {
 		db.employeesDB.getById(req.params.employeeId)
 			.then((r) => {
 				if (r.length) {
 					console.log(r);
-					//serialise
 					res.send(JSON.stringify(r));
 				} else {
 					res.status(400).send({message: "Bad Request"});
@@ -82,7 +83,7 @@ module.exports.initEmployeesViews = function (app) {
 	});
 
 
-	app.post(employeesUrl + '/', function (req, res) {
+	app.post(employeesUrl + '/', auth_token.authManager, function (req, res) {
 		//check if we try to dublicate PK id_employee
 		db.employeesDB.alreadyExists(req.body.id_employee)
 			.then((r) => {
@@ -99,7 +100,6 @@ module.exports.initEmployeesViews = function (app) {
 								db.employeesDB.getById(req.body.id_employee)
 									.then((rr) => {
 										console.log(rr);
-										//serialise
 										res.send(JSON.stringify(rr));
 									});
 							}});
@@ -107,7 +107,7 @@ module.exports.initEmployeesViews = function (app) {
 	});
 
 
-	app.put(employeesUrl + '/:employeeId', function (req, res) {
+	app.put(employeesUrl + '/:employeeId', auth_token.authManager, function (req, res) {
 		let json = JSON.parse(JSON.stringify(req.body));
 
 		let attribute_arr = ["id_employee", "empl_surname", "empl_name", "empl_patronymic", "role", "salary", "date_of_birth", "date_of_start", "phone_number", "city", "street", "zip_code"];
@@ -121,7 +121,7 @@ module.exports.initEmployeesViews = function (app) {
 		let query = query_part.join(", ");
 		console.log(query);
 
-		db.employeesDB.updateEmployee(query, req.params.employeeId)
+		db.employeesDB.updateEmployee(query, auth_token.authManager, req.params.employeeId)
 			.then((r) => {
 				if (!r.affectedRows) {
 					res.status(400).send({message: "Bad Request"});
@@ -130,7 +130,6 @@ module.exports.initEmployeesViews = function (app) {
 					db.employeesDB.getById(req.params.employeeId)
 						.then((rr)=> {
 							console.log(rr);
-							//serialise
 							res.send(JSON.stringify(rr));
 						});
 				}
@@ -139,7 +138,7 @@ module.exports.initEmployeesViews = function (app) {
 	});
 
 
-	app.delete(employeesUrl + '/:employeeId', function (req, res) {
+	app.delete(employeesUrl + '/:employeeId', auth_token.authManager, function (req, res) {
 		db.employeesDB.deleteById(req.params.employeeId)
 			.then((r) => {
 				if (!r.affectedRows) {

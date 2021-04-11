@@ -2,6 +2,8 @@ const db = require("../db/DB");
 
 const categoriesUrl = '/categories';
 
+const auth_token = require("./auth_midd");
+
 module.exports.initCategoriesViews = function(app) {
 
 	app.get(categoriesUrl + '/all/', function (req, res) {
@@ -14,7 +16,7 @@ module.exports.initCategoriesViews = function(app) {
 
 	//CRUD
 
-	app.get(categoriesUrl + '/', function (req, res) {
+	app.get(categoriesUrl + '/', auth_token.authManager, function (req, res) {
 
 		const perPage = 10;
 		let count_items = 0;
@@ -28,22 +30,22 @@ module.exports.initCategoriesViews = function(app) {
 				let json = JSON.parse(string);
 				count_items = json[0].TotalCount;
 			});
-			db.categoriesDB.getCategoriesLimit(perPage, perPage * (page-1))
-				.then((r) => {
+		db.categoriesDB.getCategoriesLimit(perPage, perPage * (page - 1))
+			.then((r) => {
 
-					//const count_items = r.count;
-					const total_pages = Math.ceil(count_items / perPage);
-					const results = r;
-					res.json({
-						"total_pages": total_pages,	//tested
-						"count_items": count_items,
-						"results": results
-					});
+				//const count_items = r.count;
+				const total_pages = Math.ceil(count_items / perPage);
+				const results = r;
+				res.json({
+					"total_pages": total_pages,	//tested
+					"count_items": count_items,
+					"results": results
 				});
+			});
 	});
 
 
-	app.get(categoriesUrl + '/:categoryId', function (req, res) {
+	app.get(categoriesUrl + '/:categoryId', auth_token.authManager, function (req, res) {
 		db.categoriesDB.getById(req.params.categoryId)
 			.then((r) => {
 				if (r.length) {
@@ -57,7 +59,7 @@ module.exports.initCategoriesViews = function(app) {
 	});
 
 
-	app.post(categoriesUrl + '/', function (req, res) {
+	app.post(categoriesUrl + '/', auth_token.authManager, function (req, res) {
 		db.categoriesDB.addCategory(req.body.categoryName)
 			.then((r) => {
 				//check if categoryName not empty and insert was successful
@@ -76,7 +78,7 @@ module.exports.initCategoriesViews = function(app) {
 	});
 
 
-	app.put(categoriesUrl + '/', function (req, res) {
+	app.put(categoriesUrl + '/', auth_token.authManager, function (req, res) {
 		db.categoriesDB.updateCategory(req.body.categoryName, req.body.categoryId)
 			.then((r) => {
 				if (!r.affectedRows) {
@@ -94,7 +96,8 @@ module.exports.initCategoriesViews = function(app) {
 	});
 
 
-	app.delete(categoriesUrl + '/:categoryId', function (req, res) {
+	app.delete(categoriesUrl + '/:categoryId', auth_token.authManager, function (req, res) {
+
 		db.categoriesDB.deleteById(req.params.categoryId)
 			.then((r) => {
 				if (!r.affectedRows) {
@@ -102,6 +105,9 @@ module.exports.initCategoriesViews = function(app) {
 				} else {
 					res.status(200).send({message: "OK"});
 				}
+			})
+			.catch(function (err) {
+				res.status(400).send({message: "Bad Request"});
 			});
 	});
 }

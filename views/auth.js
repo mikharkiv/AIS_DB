@@ -22,10 +22,8 @@ module.exports.initAuthViews = function(app) {
 					let string = JSON.stringify(r);
 					let json = JSON.parse(string);
 					const pass_hash = json[0].password;
-					console.log(pass_hash);
 					bcrypt.compare(password, pass_hash)
 						.then(function(result) {
-						console.log(result);
 						if(result){
 							const user = {id: id, password: password};
 							const accessToken = generateAccessToken(user);
@@ -40,8 +38,10 @@ module.exports.initAuthViews = function(app) {
 				}});
 	});
 
+	//get /me
+
 	function generateAccessToken(user) {
-		return jwt.sign(user, ACCESS_TOKEN_SECRET, {expiresIn: '15m'})
+		return jwt.sign(user, ACCESS_TOKEN_SECRET, {expiresIn: '10m'})
 	}
 }
 
