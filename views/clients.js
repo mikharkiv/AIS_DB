@@ -105,8 +105,8 @@ module.exports.initClientsViews = function(app) {
 				}});
 	});
 
-
-	app.put(clientsUrl + '/:cardNumber', auth_token.authManager, function (req, res) {
+//cashier and manager both able to change custumer card
+	app.put(clientsUrl + '/:cardNumber', auth_token.authenticateToken, function (req, res) {
 		let json = JSON.parse(JSON.stringify(req.body));
 
 		let attribute_arr = ["card_number", "cust_surname", "cust_name", "cust_patronymic", "phone_number", "city", "street", "zip_code", "percent"];
