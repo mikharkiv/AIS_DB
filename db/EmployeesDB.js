@@ -1,4 +1,4 @@
-const createTable = "CREATE TABLE IF NOT EXISTS Employee( `id_employee` VARCHAR(10) NOT NULL, `empl_surname` VARCHAR(50) NOT NULL, `empl_name` VARCHAR(50) NOT NULL, `empl_patronymic` VARCHAR(50) NOT NULL, `role` VARCHAR(10) NOT NULL, `salary` DECIMAL(13,4) NOT NULL, `date_of_birth` DATE NOT NULL, `date_of_start` DATE NOT NULL, `phone_number` VARCHAR(13) NOT NULL, `city` VARCHAR(50) NOT NULL, `street` VARCHAR(50) NOT NULL, `zip_code` VARCHAR(9) NOT NULL, PRIMARY KEY (`id_employee`) )ENGINE=INNODB;";
+const createTable = "CREATE TABLE IF NOT EXISTS Employee( `id_employee` VARCHAR(10) NOT NULL, `empl_surname` VARCHAR(50) NOT NULL, `empl_name` VARCHAR(50) NOT NULL, `empl_patronymic` VARCHAR(50) NOT NULL, `role` VARCHAR(10) NOT NULL, `salary` DECIMAL(13,4) NOT NULL, `date_of_birth` DATE NOT NULL, `date_of_start` DATE NOT NULL, `phone_number` VARCHAR(13) NOT NULL, `city` VARCHAR(50) NOT NULL, `street` VARCHAR(50) NOT NULL, `zip_code` VARCHAR(9) NOT NULL, `password` VARCHAR(70) NOT NULL, PRIMARY KEY (`id_employee`) )ENGINE=INNODB;";
 
 const queryGetSoldItemCount = "SELECT Employee.id_employee, Employee.empl_surname, Employee.empl_name, total_number FROM Employee INNER JOIN (SELECT id_employee, SUM(products_number) AS total_number FROM `Check` INNER JOIN Sale ON Sale.check_number = `Check`.check_number WHERE UPC IN (SELECT UPC FROM Store_Product WHERE id_product ="+
 "#PID_VAR#"+
@@ -30,6 +30,8 @@ const addEmployeeSQL = "INSERT INTO SuperMarket.Employee (id_employee, empl_surn
 const alreadyExistsSQL = "SELECT * FROM supermarket.Employee WHERE id_employee = #ID#;";
 
 const updateEmployeeSQL = "UPDATE supermarket.Employee SET #PARAMS# WHERE id_employee = '#ID#';";
+
+const isManagerSQL = "SELECT * FROM employee WHERE id_employee=#PID_VAR# AND role='manager';"
 
 module.exports.EmployeesDB = class {
 	query;
@@ -103,5 +105,10 @@ module.exports.EmployeesDB = class {
 
 	deleteById(employeeId) {
 		return this.query(deleteByIdSQL.replace('#PID_VAR#', employeeId));
+	}
+
+	//auth
+	isManager(employeeId) {
+		return this.query(isManagerSQL.replace('#PID_VAR#', employeeId));
 	}
 }

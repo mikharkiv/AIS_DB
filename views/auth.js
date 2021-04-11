@@ -1,0 +1,47 @@
+const db = require("../db/DB");
+
+const jwt = require('jsonwebtoken');
+
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
+
+const ACCESS_TOKEN_SECRET  = "cvkhjbklit654o9p9poh1qkwlsxam"
+const REFRESH_TOKEN_SECRET = "chjwkcgvwhkery2i38o2hdaksv18y"
+
+module.exports.initAuthViews = function(app) {
+
+	app.post('/login', function (req, res) {
+
+		const id = req.body.empl_id;
+		const password = req.body.empl_pass;
+
+		db.employeesDB.getById(id)
+			.then((r) => {
+				if (r.length) {
+					//logic
+					let string = JSON.stringify(r);
+					let json = JSON.parse(string);
+					const pass_hash = json[0].password;
+					console.log(pass_hash);
+					bcrypt.compare(password, pass_hash)
+						.then(function(result) {
+						console.log(result);
+						if(result){
+							const user = {id: id, password: password};
+							const accessToken = generateAccessToken(user);
+							const refreshToken = jwt.sign(user, REFRESH_TOKEN_SECRET);
+							res.json({accessToken: accessToken, refreshToken: refreshToken});
+						}else {
+							res.status(403).send({message: "Forbidden"});
+						}
+					});
+				} else {
+					res.status(404).send({message: "Not Found"});
+				}});
+	});
+
+	function generateAccessToken(user) {
+		return jwt.sign(user, ACCESS_TOKEN_SECRET, {expiresIn: '15m'})
+	}
+}
+
