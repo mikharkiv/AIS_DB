@@ -17,7 +17,7 @@ const EmployeesList = (props) => {
 				{(a,b) => a.empl_name.toLowerCase().localeCompare(b.empl_name.toLowerCase())}/>
 			<Table.Column dataIndex="empl_patronymic" title="По батькові" sorter=
 				{(a,b) => a.empl_patronymic.toLowerCase().localeCompare(b.empl_patronymic.toLowerCase())}/>
-			<Table.Column dataIndex="role" title="Посада" sorter=
+			<Table.Column dataIndex="role_uk" title="Посада" sorter=
 				{(a,b) => a.role.toLowerCase().localeCompare(b.role.toLowerCase())}/>
 			<Table.Column dataIndex="salary" title="ЗП" sorter=
 				{(a,b) => a.salary - b.salary}/>

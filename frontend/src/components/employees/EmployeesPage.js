@@ -21,8 +21,15 @@ class EmployeesPageStore extends BasicListStore {
 
 	*fetch() {
 		this.state = "loading";
-		yield EmployeesAPI.getEmployees(this.getQuery()).then((r) => this.data = r);
+		yield EmployeesAPI.getEmployees(this.getQuery()).then((r) => this.data = this._prepareData(r));
 		this.state = "done";
+	}
+
+	_prepareData(data) {
+		return data.map((e) => {
+			e.role_uk = (e.role === EmployeesAPI.ROLES.MANAGER ? 'Менеджер' : 'Касир');
+			return e;
+		})
 	}
 }
 

@@ -10,11 +10,16 @@ export class EmployeesAPI {
 	};
 
 	static _employees = [
-		EmployeesAPI.buildEmployee(0,'A','A','A','0','A','A',0,'M',0,'01.01.2000','01.01.2010'),
-		EmployeesAPI.buildEmployee(1,'B','B','B','1','B','B',1,'K',1,'01.01.2001','01.01.2011'),
-		EmployeesAPI.buildEmployee(2,'C','C','C','2','C','C',2,'M',2,'01.01.2002','01.01.2012'),
-		EmployeesAPI.buildEmployee(3,'D','D','D','3','D','D',3,'M',3,'01.01.2003','01.01.2013'),
-		EmployeesAPI.buildEmployee(4,'E','E','E','4','E','E',4,'K',4,'01.01.2004','01.01.2014'),
+		EmployeesAPI.buildEmployee(0,'A','A','A','0','A','A',0,
+			EmployeesAPI.ROLES.MANAGER,0,'01.01.2000','01.01.2010'),
+		EmployeesAPI.buildEmployee(1,'B','B','B','1','B','B',1,
+			EmployeesAPI.ROLES.CASHIER,1,'01.01.2001','01.01.2011'),
+		EmployeesAPI.buildEmployee(2,'C','C','C','2','C','C',2,
+			EmployeesAPI.ROLES.MANAGER,2,'01.01.2002','01.01.2012'),
+		EmployeesAPI.buildEmployee(3,'D','D','D','3','D','D',3,
+			EmployeesAPI.ROLES.MANAGER,3,'01.01.2003','01.01.2013'),
+		EmployeesAPI.buildEmployee(4,'E','E','E','4','E','E',4,
+			EmployeesAPI.ROLES.CASHIER,4,'01.01.2004','01.01.2014'),
 	];
 
 	static async getEmployees(urlParams) {
