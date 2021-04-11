@@ -3,7 +3,12 @@ import {Table} from "antd";
 
 const GoodsList = (props) => {
 	return (
-		<Table dataSource={props.data} pagination={false}>
+		<Table dataSource={props.data} pagination={false}
+			onRow={(record, rowIndex) => {
+				return {
+					onClick: event => props.onEdit(record.id_product)
+				};
+			}}>
 			<Table.Column dataIndex="id_product" title="#" sorter=
 				{(a,b) => a.id_product - b.id_product}/>
 			<Table.Column dataIndex="category_name" title="Категорія" sorter=

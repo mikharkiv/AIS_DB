@@ -24,7 +24,11 @@ export class GoodsAPI {
 	static async addGood(good) {
 		let greatestId = this._goods.reduce((p,c) => Math.max(p, c.id_product), 0);
 		good.id_product = greatestId + 1;
-		this._goods.push(good);
+		if (typeof good.category_number !== 'object')
+			CategoriesAPI.getCategory(good.category_number).then((r) => {
+				good.category_number = r;
+				this._goods.push(good);
+			});
 	}
 
 	static async removeGood(id) {
@@ -34,6 +38,11 @@ export class GoodsAPI {
 	static async updateGood(id, good) {
 		await GoodsAPI.removeGood(id);
 		good.id_product = id;
+		if (typeof good.category_number !== 'object')
+			CategoriesAPI.getCategory(good.category_number).then((r) => {
+				good.category_number = r;
+				this._goods.push(good);
+			});
 		this._goods.push(good);
 	}
 

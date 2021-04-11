@@ -17,7 +17,7 @@ export class CategoriesAPI {
 	}
 
 	static async getCategory(id) {
-		return this._categories.find((e) => e.category_number === id);
+		return this._categories.find((e) => e.category_number == id);
 	}
 
 	static async addCategory(card) {
