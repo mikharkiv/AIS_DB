@@ -3,7 +3,12 @@ import {Table} from "antd";
 
 const ReceiptsList = (props) => {
 	return (
-		<Table dataSource={props.data} pagination={false}>
+		<Table dataSource={props.data} pagination={false}
+		       onRow={(record, rowIndex) => {
+			       return {
+				       onClick: event => props.onEdit(record.check_number)
+			       };
+		       }}>
 			<Table.Column dataIndex="check_number" title="#" sorter=
 				{(a,b) => a.check_number - b.check_number}/>
 			<Table.Column dataIndex="id_employee_name" title="Працівник" sorter=

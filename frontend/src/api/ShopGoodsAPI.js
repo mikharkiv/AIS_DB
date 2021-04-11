@@ -1,6 +1,5 @@
 import {Api} from "./Api";
 import {GoodsAPI} from "./GoodsAPI";
-import {CategoriesAPI} from "./CategoriesAPI";
 
 // TODO bind with backend
 export class ShopGoodsAPI {
