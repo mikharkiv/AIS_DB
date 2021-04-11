@@ -33,8 +33,13 @@ const GoodAutocomplete = (props) => {
 	const [localVal, setLocalVal] = useState(props.value ? {value: props.value.value, key: props.value.key} :
 		{value: '', key: null});
 
-	useEffect(() => props.onChange && props.value.key && props.onChange(props.value.key),
+	useEffect(() => props.onChange && props.value && props.value.key !== undefined && props.onChange(props.value.key),
 		[props, props.value, props.onChange]);
+
+	useEffect(() => {
+		props.value && props.value.value && props.value.key !== undefined &&
+		setLocalVal({value: props.value.value, key: props.value.key});
+	},[props.value]);
 
 	const onChange = (val) => {
 		store.onChange(val);
