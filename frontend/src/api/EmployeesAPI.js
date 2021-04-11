@@ -4,6 +4,11 @@ import {Api} from "./Api";
 export class EmployeesAPI {
 	static apiUrl = Api.mainUrl + 'employees/';
 
+	static ROLES = {
+		MANAGER: 'manager',
+		CASHIER: 'cashier'
+	};
+
 	static _employees = [
 		EmployeesAPI.buildEmployee(0,'A','A','A','0','A','A',0,'M',0,'01.01.2000','01.01.2010'),
 		EmployeesAPI.buildEmployee(1,'B','B','B','1','B','B',1,'K',1,'01.01.2001','01.01.2011'),
