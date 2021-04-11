@@ -16,6 +16,7 @@ import {useHistory} from "react-router";
 import {useStores} from "../hooks/use-stores";
 import CardsPage from "./cards/CardsPage";
 import CategoriesPage from "./categories/CategoriesPage";
+import GoodsPage from "./goods/GoodsPage";
 
 const { Content, Sider } = Layout;
 
@@ -63,7 +64,7 @@ const MainLayout = () => {
 						{/* Employees */}
 						<Route path={`${path}${purePaths[1]}`} component={null}/>
 						{/* Goods */}
-						<Route path={`${path}${purePaths[2]}`} component={null}/>
+						<Route path={`${purePaths[2]}`} component={GoodsPage}/>
 						{/* Shop goods */}
 						<Route path={`${path}${purePaths[3]}`} component={null}/>
 						{/* Categories */}
