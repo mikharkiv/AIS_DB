@@ -23,6 +23,11 @@ const QueriesWindow = (props) => {
 			data['time2'] = data['time_period'][1].format('DD.MM.YYYY').toString();
 		}
 		let values = Object.values(data);
+		let out = {};
+		if (values.length === 1) out = {par: values[0]};
+		else for (let i = 0; i < values.length; i++) {
+			out[`par${i && i}`] = values[i];
+		}
 		// TODO
 	}
 
