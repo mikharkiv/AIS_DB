@@ -1,25 +1,27 @@
-import logo from './logo.svg';
 import './App.css';
+import {Redirect, Route, Switch} from "react-router";
+import LoginPage from "./components/LoginPage";
+import {useStores} from "./hooks/use-stores";
+import {observer} from "mobx-react";
+import MainLayout from "./components/MainLayout";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+const App = () => {
+	let loginStore = useStores().loginStore;
+
+	return (
+		<Switch>
+			<Route exact path="/login" component={LoginPage} />
+			{
+				loginStore.isApiAvailable ? (
+					loginStore.isLoggedIn ? (
+						<MainLayout />
+					) : (<Redirect to="/login" />)
+				) : (
+					<>Неможливо з'єднатись із сервером. Спробуйте ще раз пізніше</>
+				)
+			}
+		</Switch>
+	);
 }
 
-export default App;
+export default observer(App);
