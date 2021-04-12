@@ -24,6 +24,11 @@ const ReceiptCreateEditModal = (props) => {
 	useEffect(() => {
 		setLoading(true);
 		form.resetFields();
+		productForm.resetFields();
+		setItems([]);
+		setSumTotal(0);
+		setVat(0);
+		setProductMode({edit: false});
 		if (!props.edit) setLoading(false);
 		else ReceiptsAPI.getReceipt(props.id).then((res) => {
 			if (!res) return;

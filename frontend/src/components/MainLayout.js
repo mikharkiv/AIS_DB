@@ -20,6 +20,7 @@ import GoodsPage from "./goods/GoodsPage";
 import EmployeesPage from "./employees/EmployeesPage";
 import ShopGoodsPage from "./shop-goods/ShopGoodsPage";
 import ReceiptsPage from "./receipts/ReceiptsPage";
+import QueriesPage from "./QueriesPage";
 
 const { Content, Sider } = Layout;
 
@@ -30,7 +31,7 @@ const MainLayout = () => {
 	const loginStore = useStores().loginStore;
 	const headerStore = useStores().headerStore;
 
-	const paths = ['/', '/employees', '/goods', '/shop_goods', '/categories', '/receipts', '/cards'];
+	const paths = ['/', '/employees', '/goods', '/shop_goods', '/categories', '/receipts', '/cards', '/queries'];
 	let purePaths = paths.slice();
 	purePaths.forEach((e) => e.replace('/', ''));
 
@@ -39,7 +40,7 @@ const MainLayout = () => {
 			<Sider>
 				<Menu mode="inline" theme="dark" style={{height: "100vh"}} onClick={
 					({key}) => {
-						if (key === "7") {
+						if (key === "8") {
 							loginStore.doLogout();
 						} else history.push(paths[key]);
 					}
@@ -51,7 +52,8 @@ const MainLayout = () => {
 					<Menu.Item key="4" icon={<ContactsOutlined/>}>Категорії</Menu.Item>
 					<Menu.Item key="5" icon={<TeamOutlined/>}>Чек</Menu.Item>
 					<Menu.Item key="6" icon={<FileOutlined/>}>Карти клієнтів</Menu.Item>
-					<Menu.Item key="7" icon={<LogoutOutlined/>}>Вийти</Menu.Item>
+					<Menu.Item key="7" icon={<FileOutlined/>}>Запити</Menu.Item>
+					<Menu.Item key="8" icon={<LogoutOutlined/>}>Вийти</Menu.Item>
 				</Menu>
 			</Sider>
 			<Content>
@@ -76,6 +78,8 @@ const MainLayout = () => {
 						<Route path={`${purePaths[5]}`} component={ReceiptsPage}/>
 						{/* Cards */}
 						<Route path={`${purePaths[6]}`} component={CardsPage}/>
+						{/* Queries */}
+						<Route path={`${purePaths[7]}`} component={QueriesPage}/>
 					</Switch>
 				</div>
 			</Content>
