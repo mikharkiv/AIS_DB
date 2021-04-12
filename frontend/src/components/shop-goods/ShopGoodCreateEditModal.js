@@ -5,11 +5,14 @@ import LoadingIcon from "../LoadingIcon";
 import {ShopGoodsAPI} from "../../api/ShopGoodsAPI";
 import ShopGoodAutocomplete from "../selects/ShopGoodSelectBar";
 import GoodAutocomplete from "../selects/GoodSelectBar";
+import {EmployeesAPI} from "../../api/EmployeesAPI";
+import {useStores} from "../../hooks/use-stores";
 
 const ShopGoodCreateEditModal = (props) => {
 	const [form] = Form.useForm();
 	const [isLoading, setLoading] = useState(true);
 
+	const loginStore = useStores().loginStore;
 	useEffect(() => {
 		setLoading(true);
 		form.resetFields();
@@ -64,7 +67,7 @@ const ShopGoodCreateEditModal = (props) => {
 						</Form.Item>
 					</Form>
 				)}
-			{props.edit && (<Button danger onClick={onDelete}>Видалити</Button>)}
+			{props.edit  && loginStore.me.role === EmployeesAPI.ROLES.MANAGER && (<Button danger onClick={onDelete}>Видалити</Button>)}
 		</Modal>
 	);
 }

@@ -4,12 +4,14 @@ import locale from "antd/es/date-picker/locale/uk_UA";
 import {useState, useEffect} from "react";
 import LoadingIcon from "../LoadingIcon";
 import {EmployeesAPI} from "../../api/EmployeesAPI";
+import {useStores} from "../../hooks/use-stores";
 const moment = require('moment');
 
 const EmployeeCreateEditModal = (props) => {
 	const [form] = Form.useForm();
 	const [isLoading, setLoading] = useState(true);
 
+	const loginStore = useStores().loginStore;
 	useEffect(() => {
 		form.resetFields();
 		if (!props.edit) setLoading(false);
@@ -107,7 +109,7 @@ const EmployeeCreateEditModal = (props) => {
 						</Form.Item>
 					</Form>
 				)}
-			{props.edit && (<Button danger onClick={onDelete}>Видалити</Button>)}
+			{props.edit  && loginStore.me.role === EmployeesAPI.ROLES.MANAGER && (<Button danger onClick={onDelete}>Видалити</Button>)}
 		</Modal>
 	);
 }

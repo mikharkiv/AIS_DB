@@ -3,10 +3,13 @@ import {Button, Form, Input, InputNumber, Modal} from "antd";
 import {useState, useEffect} from "react";
 import LoadingIcon from "../LoadingIcon";
 import {CategoriesAPI} from "../../api/CategoriesAPI";
+import {EmployeesAPI} from "../../api/EmployeesAPI";
+import {useStores} from "../../hooks/use-stores";
 
 const CategoryCreateEditModal = (props) => {
 	const [form] = Form.useForm();
 	const [isLoading, setLoading] = useState(true);
+	const loginStore = useStores().loginStore;
 
 	useEffect(() => {
 		form.resetFields();
@@ -36,7 +39,7 @@ const CategoryCreateEditModal = (props) => {
 						</Form.Item>
 					</Form>
 				)}
-			{props.edit && (<Button danger onClick={onDelete}>Видалити</Button>)}
+			{props.edit  && loginStore.me.role === EmployeesAPI.ROLES.MANAGER && (<Button danger onClick={onDelete}>Видалити</Button>)}
 		</Modal>
 	);
 }

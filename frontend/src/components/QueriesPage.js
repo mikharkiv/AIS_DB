@@ -1,14 +1,19 @@
 import QueriesWindow from "./QueriesWindow";
 import {observer} from "mobx-react";
 import {Typography} from "antd";
+import {EmployeesAPI} from "../api/EmployeesAPI";
+import {useStores} from "../hooks/use-stores";
 
 const {Title} = Typography;
 
 const QueriesPage = () => {
+	const loginStore = useStores().loginStore;
+
 	return (
 		<>
 			<Title>Запити</Title>
 			<QueriesWindow queries={
+				loginStore.me.role === EmployeesAPI.ROLES.CASHIER ?
 				[
 					{id: 1, text: "Скласти список працівників, що займають посаду касира, відсортованих за прізвищем;", deps: []},
 					{id: 2, text: "Скласти список товарів, що належать певній категорії, відсортованих за назвою;", deps: ['category']},
@@ -26,6 +31,7 @@ const QueriesPage = () => {
 					{id: 18, text: "Скласти список усіх постійних клієнтів, що мають карту клієнта, по полях  ПІБ, телефон, адреса (якщо вказана);", deps: []},
 					{id: 19, text: "Скласти список усіх постійних клієнтів, що мають карту клієнта із певним відсотком.", deps: ['percent']},
 					{id: 20, text: "За UPC-товару знайти ціну продажу товару, кількість наявних одиниць товару, назву та характеристики товару.", deps: ['shop_good']},
+					] : [
 					{id: 21, text: "Скласти список чеків,  видрукуваних даним касиром за певний період часу;", deps: ['employee', 'time_period']},
 					{id: 22, text: "За номером чеку вивести усю інформацію про даний чек.", deps: ['receipt']},
 					{id: 23, text: "Вивести усю інформацію про покупця з певним прізвищем, що має карту клієнта;", deps: ['cust_surname']},

@@ -9,6 +9,7 @@ import {makeObservable} from "mobx";
 import {useStores} from "../../hooks/use-stores";
 import CardCreateEditModal from "./CardCreateEditModal";
 import {observer} from "mobx-react";
+import {EmployeesAPI} from "../../api/EmployeesAPI";
 
 class CardsPageStore extends BasicListStore {
 
@@ -30,6 +31,7 @@ class CardsPageStore extends BasicListStore {
 const CardsPage = () => {
 	const store = useMemo(() => new CardsPageStore(), []);
 	const header = useStores().headerStore;
+	const loginStore = useStores().loginStore;
 
 	const [modalVisible, setModalVisible] = useState(false);
 	const [modalParams, setModalParams] = useState({});
@@ -80,7 +82,7 @@ const CardsPage = () => {
 
 	return (
 		<>
-			<SearchAddBar isLoading={store.state === "loading"} onSearch={store.doSearch} onAdd={onAdd}/>
+			<SearchAddBar hasButton={loginStore.me.role === EmployeesAPI.ROLES.MANAGER} isLoading={store.state === "loading"} onSearch={store.doSearch} onAdd={onAdd}/>
 			<Row key="row2" justify="center" gutter={20}>
 				<Col span={20}>
 					<CardsList data={store.data} onEdit={onEdit} />

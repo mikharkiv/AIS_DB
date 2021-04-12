@@ -129,7 +129,7 @@ const ReceiptsPage = () => {
 
 	return (
 		<>
-		<SearchAddBar isLoading={store.state === "loading"} onSearch={store.doSearch} onAdd={onAdd}/>
+		<SearchAddBar hasButton={true} isLoading={store.state === "loading"} onSearch={store.doSearch} onAdd={onAdd}/>
 			<Row key="row2" justify="center" gutter={20}>
 				<Col span={20}>
 					<ReceiptsList data={store.data} onEdit={onEdit} />

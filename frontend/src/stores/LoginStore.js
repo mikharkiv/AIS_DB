@@ -57,10 +57,7 @@ export class LoginStore {
 	}
 
 	*_loadMe() {
-		// TODO load me
-		this.me = {
-
-		};
+		Api.fetch(Api.mainUrl + 'me/').then((r) => r.json()).then((r) => this.me=r[0]);
 	}
 
 	*doLogout() {

@@ -39,6 +39,7 @@ class EmployeesPageStore extends BasicListStore {
 const EmployeesPage = () => {
 	const store = useMemo(() => new EmployeesPageStore(), []);
 	const header = useStores().headerStore;
+	const loginStore = useStores().loginStore;
 
 	const [modalVisible, setModalVisible] = useState(false);
 	const [modalParams, setModalParams] = useState({});
@@ -64,6 +65,7 @@ const EmployeesPage = () => {
 	};
 
 	let onEdit = (empl_id) => {
+		if (loginStore.me.role !== EmployeesAPI.ROLES.MANAGER) return;
 		setModalParams({
 			id: empl_id,
 			edit: true,
@@ -89,7 +91,7 @@ const EmployeesPage = () => {
 
 	return (
 		<>
-		<SearchAddBar isLoading={store.state === "loading"} onSearch={store.doSearch} onAdd={onAdd}/>
+		<SearchAddBar hasButton={loginStore.me.role === EmployeesAPI.ROLES.MANAGER} isLoading={store.state === "loading"} onSearch={store.doSearch} onAdd={onAdd}/>
 			<Row key="row2" justify="center" gutter={24}>
 				<Col span={24}>
 					<EmployeesList data={store.data} onEdit={onEdit} />

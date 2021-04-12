@@ -6,6 +6,8 @@ import {ReceiptsAPI} from "../../api/ReceiptsAPI";
 import CardAutocomplete from "../selects/CardSelectBar";
 import ShopGoodAutocomplete from "../selects/ShopGoodSelectBar";
 import {ShopGoodsAPI} from "../../api/ShopGoodsAPI";
+import {EmployeesAPI} from "../../api/EmployeesAPI";
+import {useStores} from "../../hooks/use-stores";
 const moment = require('moment');
 
 const {Title} = Typography;
@@ -21,6 +23,7 @@ const ReceiptCreateEditModal = (props) => {
 		edit: false,
 	});
 
+	const loginStore = useStores().loginStore;
 	useEffect(() => {
 		setLoading(true);
 		form.resetFields();
@@ -149,7 +152,7 @@ const ReceiptCreateEditModal = (props) => {
 						</Form>
 					</>
 				)}
-			{props.edit && (<Button danger onClick={onDelete}>Видалити</Button>)}
+			{props.edit  && loginStore.me.role === EmployeesAPI.ROLES.MANAGER && (<Button danger onClick={onDelete}>Видалити</Button>)}
 		</Modal>
 	);
 }

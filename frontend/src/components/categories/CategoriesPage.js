@@ -8,6 +8,7 @@ import {useStores} from "../../hooks/use-stores";
 import CategoriesList from "./CategoriesList";
 import {CategoriesAPI} from "../../api/CategoriesAPI";
 import CategoryCreateEditModal from "./CategoryCreateEditModal";
+import {EmployeesAPI} from "../../api/EmployeesAPI";
 
 class CategoriesPageStore extends BasicListStore {
 
@@ -29,6 +30,7 @@ class CategoriesPageStore extends BasicListStore {
 const CategoriesPage = () => {
 	const store = useMemo(() => new CategoriesPageStore(), []);
 	const header = useStores().headerStore;
+	const loginStore = useStores().loginStore;
 
 	const [modalVisible, setModalVisible] = useState(false);
 	const [modalParams, setModalParams] = useState({});
@@ -54,6 +56,7 @@ const CategoriesPage = () => {
 	};
 
 	let onEdit = (cat_id) => {
+		if (loginStore.me.role !== EmployeesAPI.ROLES.MANAGER) return;
 		setModalParams({
 			id: cat_id,
 			edit: true,
@@ -79,7 +82,7 @@ const CategoriesPage = () => {
 
 	return (
 		<>
-			<SearchAddBar isLoading={store.state === "loading"} onSearch={store.doSearch} onAdd={onAdd}/>
+			<SearchAddBar hasButton={loginStore.me.role === EmployeesAPI.ROLES.MANAGER} isLoading={store.state === "loading"} onSearch={store.doSearch} onAdd={onAdd}/>
 			<Row key="row2" justify="center" gutter={20}>
 				<Col span={20}>
 					<CategoriesList data={store.data} onEdit={onEdit} />

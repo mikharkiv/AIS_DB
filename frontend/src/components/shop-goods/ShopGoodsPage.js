@@ -11,6 +11,7 @@ import {ShopGoodsAPI} from "../../api/ShopGoodsAPI";
 import GoodCreateEditModal from "../goods/GoodCreateEditModal";
 import ShopGoodCreateEditModal from "./ShopGoodCreateEditModal";
 import {GoodsAPI} from "../../api/GoodsAPI";
+import {EmployeesAPI} from "../../api/EmployeesAPI";
 
 class ShopGoodsPageStore extends BasicListStore {
 
@@ -43,6 +44,7 @@ class ShopGoodsPageStore extends BasicListStore {
 const ShopGoodsPage = () => {
 	const store = useMemo(() => new ShopGoodsPageStore(), []);
 	const header = useStores().headerStore;
+	const loginStore = useStores().loginStore;
 
 	const [modalVisible, setModalVisible] = useState(false);
 	const [modalParams, setModalParams] = useState({});
@@ -69,6 +71,7 @@ const ShopGoodsPage = () => {
 	};
 
 	let onEdit = (good_id) => {
+		if (loginStore.me.role !== EmployeesAPI.ROLES.MANAGER) return;
 		setModalParams({
 			id: good_id,
 			edit: true,
@@ -94,7 +97,7 @@ const ShopGoodsPage = () => {
 
 	return (
 		<>
-		<SearchAddBar isLoading={store.state === "loading"} onSearch={store.doSearch} onAdd={onAdd}/>
+		<SearchAddBar hasButton={loginStore.me.role === EmployeesAPI.ROLES.MANAGER} isLoading={store.state === "loading"} onSearch={store.doSearch} onAdd={onAdd}/>
 			<Row key="row2" justify="center" gutter={20}>
 				<Col span={20}>
 					<ShopGoodsList data={store.data} onEdit={onEdit} />

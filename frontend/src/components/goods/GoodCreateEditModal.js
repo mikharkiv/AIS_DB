@@ -4,11 +4,14 @@ import {useState, useEffect} from "react";
 import LoadingIcon from "../LoadingIcon";
 import {GoodsAPI} from "../../api/GoodsAPI";
 import CategoryAutocomplete from "../selects/CategorySelectBar";
+import {EmployeesAPI} from "../../api/EmployeesAPI";
+import {useStores} from "../../hooks/use-stores";
 
 const GoodCreateEditModal = (props) => {
 	const [form] = Form.useForm();
 	const [isLoading, setLoading] = useState(true);
 
+	const loginStore = useStores().loginStore;
 	useEffect(() => {
 		setLoading(true);
 		form.resetFields();
@@ -53,7 +56,7 @@ const GoodCreateEditModal = (props) => {
 						</Form.Item>
 					</Form>
 				)}
-			{props.edit && (<Button danger onClick={onDelete}>Видалити</Button>)}
+			{props.edit  && loginStore.me.role === EmployeesAPI.ROLES.MANAGER && (<Button danger onClick={onDelete}>Видалити</Button>)}
 		</Modal>
 	);
 }

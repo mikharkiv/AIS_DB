@@ -22,7 +22,11 @@ const SearchAddBar = (props) => {
 				        loading={props.isLoading}
 				        style={{"flexGrow": 1, "marginRight": "15px"}}
 				/>
+				{
+					props.hasButton && (
 				<Button type="primary" style={{backgroundColor: "green", borderColor: "green"}} icon={<PlusOutlined/>} onClick={props.onAdd}>Додати</Button>
+					)
+				}
 			</Col>
 		</Row>
 	);

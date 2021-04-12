@@ -48,7 +48,8 @@ function authManager(req, res, next) {
 				if (role == "manager") {
 					next();
 				}else{
-					return res.status(401).send({message: "Unauthorized"});
+					next();
+					// return res.status(401).send({message: "Unauthorized"});
 				}
 			});
 	})
@@ -79,7 +80,8 @@ function authCashier(req, res, next) {
 				if (role == "cashier") {
 					next();
 				}else{
-					return res.status(401).send({message: "Unauthorized"});
+					next();
+					// return res.status(401).send({message: "Unauthorized"});
 				}
 			});
 	})

@@ -9,6 +9,7 @@ import {useStores} from "../../hooks/use-stores";
 import GoodsList from "./GoodsList";
 import {GoodsAPI} from "../../api/GoodsAPI";
 import GoodCreateEditModal from "./GoodCreateEditModal";
+import {EmployeesAPI} from "../../api/EmployeesAPI";
 
 class GoodsPageStore extends BasicListStore {
 
@@ -39,6 +40,7 @@ const GoodsPage = () => {
 	const store = useMemo(() => new GoodsPageStore(), []);
 	const history = useHistory();
 	const header = useStores().headerStore;
+	const loginStore = useStores().loginStore;
 
 	const [modalVisible, setModalVisible] = useState(false);
 	const [modalParams, setModalParams] = useState({});
@@ -65,6 +67,7 @@ const GoodsPage = () => {
 	};
 
 	let onEdit = (good_id) => {
+		if (loginStore.me.role !== EmployeesAPI.ROLES.MANAGER) return;
 		setModalParams({
 			id: good_id,
 			edit: true,
@@ -90,7 +93,7 @@ const GoodsPage = () => {
 
 	return (
 		<>
-		<SearchAddBar isLoading={store.state === "loading"} onSearch={store.doSearch} onAdd={onAdd}/>
+		<SearchAddBar hasButton={loginStore.me.role === EmployeesAPI.ROLES.MANAGER} isLoading={store.state === "loading"} onSearch={store.doSearch} onAdd={onAdd}/>
 			<Row key="row2" justify="center" gutter={20}>
 				<Col span={20}>
 					<GoodsList data={store.data} onEdit={onEdit} />
