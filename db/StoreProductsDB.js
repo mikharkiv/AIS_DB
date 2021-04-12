@@ -17,6 +17,8 @@ const updateClientSQL = "UPDATE Store_Product SET #PARAMS# WHERE UPC = '#ID#';";
 const deleteByIdSQL = "DELETE FROM Store_Product WHERE UPC=#PID_VAR#;";
 
 
+const countIdProductSQL = "SELECT COUNT(*) AS TotalCount FROM Store_Product WHERE id_product=#ID#;";
+
 module.exports.StoreProductsDB = class {
 	query;
 
@@ -56,5 +58,9 @@ module.exports.StoreProductsDB = class {
 
 	updateStoreProduct(query, upc){
 		return this.query(updateClientSQL.replace('#PARAMS#', query).replace('#ID#', upc));
+	}
+
+	countIdProduct(id_product){
+		return this.query(countIdProductSQL.replace('#ID#', id_product));
 	}
 }

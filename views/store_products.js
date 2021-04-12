@@ -1,6 +1,7 @@
 const db = require("../db/DB");
 const storeProductsUrl = '/api/store-products';
 const auth_token = require("./auth_midd");
+const data_parse = require("./utility");
 
 module.exports.initStoreProductsViews = function(app) {
 
@@ -19,27 +20,44 @@ module.exports.initStoreProductsViews = function(app) {
 				count_items = json[0].TotalCount;
 			});
 		db.storeProductsDB.getStoreProductsLimit(perPage, perPage * (page - 1))
-			.then((r) => {
+			.then(async (r) => {
 				const total_pages = Math.ceil(count_items / perPage);
 				if (count_items > perPage) {
 					count_items = count_items - perPage * (page - 1);
 				}
-				const results = r;
+				let string = JSON.stringify(r);
+				let json = JSON.parse(string);
+				for (let i=0; i<json.length; i++) {
+					db.productsDB.getById(json[0].id_product)
+						.then((rr) => {
+							if (rr.length) {
+								json[i].id_product = rr;
+							}
+						});
+				}
 				res.json({
 					"total_pages": total_pages,
 					"count_items": count_items,
-					"results": results
+					"results": json
 				});
 			});
 	});
-
 
 	app.get(storeProductsUrl + '/:UPC', auth_token.authManager, function (req, res) {
 		db.storeProductsDB.getById(req.params.UPC)
 			.then((r) => {
 				if (r.length) {
-					console.log(r);
-					res.send(JSON.stringify(r));
+					//console.log(r);
+					let string = JSON.stringify(r);
+					let json = JSON.parse(string);
+					db.productsDB.getById(json[0].id_product)
+						.then((rr) => {
+							if (rr.length) {
+								json[0].id_product = rr;
+								console.log(json[0]);
+								res.send(json[0]);
+							}
+							});
 				} else {
 					res.status(400).send({message: "Bad Request"});
 				}
@@ -48,10 +66,21 @@ module.exports.initStoreProductsViews = function(app) {
 
 
 	app.post(storeProductsUrl + '/', auth_token.authManager, function (req, res) {
-		//check if we try to dublicate PK upc
 		if(req.body.UPC != req.body.UPC_prom){
 			res.status(400).send({message: "Bad Request"});
 		}
+		//check if we try to dublicate PK upc
+		db.storeProductsDB.countIdProduct(req.body.id_product)
+			.then((r) => {
+				let string = JSON.stringify(r);
+				let json = JSON.parse(string);
+				count_items = json[0].TotalCount;
+				console.log(count_items);
+				if (count_items >= 2) {
+					res.status(400).send({message: "Bad Request"});
+				}else{
+
+
 		db.storeProductsDB.getAllCountByID(req.body.UPC)
 			.then((r) => {
 				let string = JSON.stringify(r);
@@ -69,20 +98,29 @@ module.exports.initStoreProductsViews = function(app) {
 								db.storeProductsDB.getById(req.body.UPC)
 									.then((rr) => {
 										console.log(rr);
-										res.send(JSON.stringify(rr));
+
+										let string2 = JSON.stringify(rr);
+										let json2 = JSON.parse(string2);
+										db.productsDB.getById(json2[0].id_product)
+											.then((rrr) => {
+												if (rrr.length) {
+													json2[0].id_product = rrr;
+													console.log(json2[0]);
+													res.send(json2[0]);
+												}
+											});
 									});
 							}
 						});
 				}
 			});
+				}
 	});
-
+});
 
 	app.put(storeProductsUrl + '/:UPC', auth_token.authManager, function (req, res) {
 		let json = JSON.parse(JSON.stringify(req.body));
-	//UPC, UPC_prom, id_product, selling_price, products_number, promotional_product
 		let attribute_arr = ["UPC", "UPC_prom", "id_product", "selling_price", "products_number", "promotional_product"];
-
 		let query_part = [];
 		for (let key of attribute_arr) {
 			if (json[key] !== undefined) {
@@ -100,7 +138,18 @@ module.exports.initStoreProductsViews = function(app) {
 					db.storeProductsDB.getById(req.params.UPC)
 						.then((rr) => {
 							console.log(rr);
-							res.send(JSON.stringify(rr));
+
+							let string2 = JSON.stringify(rr);
+							let json2 = JSON.parse(string2);
+							db.productsDB.getById(json2[0].id_product)
+								.then((rrr) => {
+									if (rrr.length) {
+										json2[0].id_product = rrr;
+										console.log(json2[0]);
+										res.send(json2[0]);
+									}
+								});
+							//res.send(JSON.stringify(rr));
 						});
 				}});
 	});
