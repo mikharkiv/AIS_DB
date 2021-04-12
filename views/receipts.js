@@ -1,6 +1,10 @@
 const db = require("../db/DB");
 const receiptsUrl = '/receipts';
 const auth_token = require("./auth_midd");
+const date_parse = require("./utility");
+
+const jwt = require('jsonwebtoken');
+const ACCESS_TOKEN_SECRET  = "cvkhjbklit654o9p9poh1qkwlsxam"
 
 module.exports.initReceiptsViews = function(app) {
 
@@ -24,7 +28,7 @@ module.exports.initReceiptsViews = function(app) {
 				if (count_items > perPage) {
 					count_items = count_items - perPage * (page - 1);
 				}
-				const results = r;
+				const results = date_parse.changeDateCheckArray(r);
 				res.json({
 					"total_pages": total_pages,
 					"count_items": count_items,
@@ -39,7 +43,7 @@ module.exports.initReceiptsViews = function(app) {
 			.then((r) => {
 				if (r.length) {
 					console.log(r);
-					res.send(JSON.stringify(r));
+					res.send(date_parse.changeDateCheck(r));
 				} else {
 					res.status(400).send({message: "Bad Request"});
 				}
@@ -56,7 +60,17 @@ module.exports.initReceiptsViews = function(app) {
 				if (count_items != 0) {
 					res.status(400).send({message: "Bad Request"});
 				} else {
-					db.receiptsDB.addReceipt(req.body.check_number, req.body.id_employee, req.body.card_number, req.body.print_date, req.body.sum_total)
+					const authHeader = req.headers['authorization']
+					const token = authHeader && authHeader.split(' ')[1]
+
+					jwt.verify(token, ACCESS_TOKEN_SECRET, (err, user) => {
+						if (err) {
+							console.log(err);
+							return res.status(401).send({message: "Unauthorized"});
+						}
+						req.user = user;
+						console.log(req.user.id)
+					db.receiptsDB.addReceipt(req.body.check_number, req.user.id, req.body.card_number, req.body.print_date, req.body.sum_total)
 						.then((r) => {
 							if (!r.affectedRows) {
 								res.status(400).send({message: "Bad Request"});
@@ -65,13 +79,14 @@ module.exports.initReceiptsViews = function(app) {
 								db.receiptsDB.getById(req.body.check_number)
 									.then((rr) => {
 										console.log(rr);
-										res.send(JSON.stringify(rr));
+										res.send(date_parse.changeDateCheck(rr));
 									});
 							}
 						});
-				}
-			});
+				});
+	}
 	});
+});
 
 
 	app.put(receiptsUrl + '/:check_number', auth_token.authenticateToken, function (req, res) {
@@ -96,7 +111,7 @@ module.exports.initReceiptsViews = function(app) {
 					db.receiptsDB.getById(req.params.check_number)
 						.then((rr) => {
 							console.log(rr);
-							res.send(JSON.stringify(rr));
+							res.send(date_parse.changeDateCheck(rr));
 						});
 				}});
 	});
