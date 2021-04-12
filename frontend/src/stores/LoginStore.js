@@ -17,29 +17,7 @@ export class LoginStore {
 	}
 
 	_loadFromStorage() {
-		if (localStorage.length === 0) return;
-		let token = localStorage.getItem('token');
-		if (!token) return;
-		Api.fetchNoToken('http://localhost:8000/api/me/', {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json',
-				'Authorization': `Bearer ${token}`
-			},
-			body: JSON.stringify({token})
-		}).then((r) => {
-			if (!r) {
-				this.isApiAvailable = false;
-			} else if (r.ok) {
-				this.errorLoggingIn = false;
-				this.isLoggedIn = true;
-			}
-			else {
-				this.isLoggedIn = false;
-				this.errorLoggingIn = true;
-				return Response.error();
-			}
-			this.state = "inited";
-		});
+
 	}
 
 	*doLogin(login, password, callback) {
@@ -48,13 +26,14 @@ export class LoginStore {
 			return;
 		}
 		this.state = "loading";
-		yield Api.fetchNoToken('http://localhost:8000/api/token/', {
+		yield Api.fetchNoToken('http://localhost:8080/api/login/', {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({ empl_id: login, empl_pass: password})
 		}).then((r) => {
+			console.log(r);
 			if (!r) {
-				this.isApiAvailable = false;
+				// this.isApiAvailable = false;
 			} else if (r.ok)
 				return r.json();
 			else {
@@ -63,21 +42,18 @@ export class LoginStore {
 				return Response.error();
 			}
 		}).then((r) => {
+			if (!r) return;
 			localStorage.setItem('token', r.accessToken);
 			localStorage.setItem('refresh', r.refreshToken);
-			this.errorLoggingIn = false;
-			this.isLoggedIn = true;
+			this._loadMe();
+			runInAction(() => {
+				this.errorLoggingIn = false;
+				this.hasLoggedOut = false;
+				this.isLoggedIn = true;
+			});
 			if (callback)
 				callback.call();
 		});
-		this._loadMe();
-		runInAction(() => {
-			this.errorLoggingIn = false;
-			this.hasLoggedOut = false;
-			this.isLoggedIn = true;
-		});
-		if (callback)
-			callback.call();
 	}
 
 	*_loadMe() {

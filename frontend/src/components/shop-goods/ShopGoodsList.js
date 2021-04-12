@@ -9,10 +9,10 @@ const ShopGoodsList = (props) => {
 					onClick: event => props.onEdit(record.upc)
 				};
 			}}>
-			<Table.Column dataIndex="upc" title="#" sorter=
-				{(a,b) => a.upc - b.upc}/>
-			<Table.Column dataIndex="upc_prom_id" title="# акційний" sorter=
-				{(a,b) => a.upc_prom_id - b.upc_prom_id}/>
+			<Table.Column dataIndex="UPC" title="#" sorter=
+				{(a,b) => a.UPC - b.UPC}/>
+			<Table.Column dataIndex="UPC_prom" title="# акційний" sorter=
+				{(a,b) => a.UPC_prom - b.UPC_prom}/>
 			<Table.Column dataIndex="id_product_id" title="# товару" sorter=
 				{(a,b) => a.id_product_id - b.id_product_id}/>
 			<Table.Column dataIndex="selling_price" title="Ціна" sorter=

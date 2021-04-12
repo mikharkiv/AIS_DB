@@ -2,13 +2,13 @@ const {initDB, query} = require("./db/DB");
 
 const express = require('express');
 const app = express();
+const cors = require('cors');
 const port = 8080;
 
 const bodyParser = require('body-parser');
 app.use(bodyParser.json());
 
 app.use(express.json())
-require('dotenv').config()
 
 const {initViews} = require("./views/views");
 
@@ -24,5 +24,8 @@ async function main() {
 }
 
 function setupExpress() {
+	// CORS
+	app.use(cors());
+	app.options('*', cors());
 	initViews(app);
 }

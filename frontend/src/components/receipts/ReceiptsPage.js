@@ -9,7 +9,6 @@ import ReceiptsList from "./ReceiptsList";
 import {ReceiptsAPI} from "../../api/ReceiptsAPI";
 import ReceiptCreateEditModal from "./ReceiptCreateEditModal";
 import EmployeeAutocomplete from "../selects/EmployeeSelectBar";
-import {Api} from "../../api/Api";
 import {QueriesAPI} from "../../api/QueriesAPI";
 
 class ReceiptsPageStore extends BasicListStore {
@@ -22,16 +21,25 @@ class ReceiptsPageStore extends BasicListStore {
 	*fetch(query = null, data = {}) {
 		this.state = "loading";
 		if (!query)
-			yield ReceiptsAPI.getReceipts(this.getQuery()).then((r) => this.data = this._prepareData(r));
+			yield ReceiptsAPI.getReceipts(this.getQuery()).then((r) =>{
+				console.log(r.results);
+				this.totalPages = r.total_pages;
+				this.data = this._prepareData(r.results);
+			});
 		else if (query.id == 13 || query.id == 14)
-			yield QueriesAPI.query(query.id, data).then((r) => this.data = this._prepareData(r));
+			yield QueriesAPI.query(query.id, data).then((r) => {
+				console.log(r.results);
+				this.totalPages = r.total_pages;
+				this.data = this._prepareData(r.results);
+			});
 		this.state = "done";
 	}
 
 	_prepareData(data) {
 		return data.map((e) => {
 			e.id_employee_name = e.id_employee.empl_name + ' ' + e.id_employee.empl_surname;
-			e.card_number_name = e.card_number.cust_name + ' ' + e.card_number.cust_surname;
+			console.log(e.card_number);
+			e.card_number && (e.card_number_name = e.card_number.cust_name + ' ' + e.card_number.cust_surname);
 			return e;
 		});
 	}

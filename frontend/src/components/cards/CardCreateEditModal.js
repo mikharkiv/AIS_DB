@@ -12,7 +12,7 @@ const CardCreateEditModal = (props) => {
 	useEffect(() => {
 		form.resetFields();
 		if (!props.edit) setLoading(false);
-		else CardsAPI.getCard(props.id).then((r) => form.setFieldsValue(r));
+		else CardsAPI.getCard(props.id).then((r) => form.setFieldsValue(r[0]));
 	}, [props]);
 
 	let onDelete = () => {
@@ -31,6 +31,12 @@ const CardCreateEditModal = (props) => {
 				isLoading ? (<LoadingIcon />) : (
 					<Form form={form}
 					      layout="vertical">
+						{!props.edit && (
+							<Form.Item name="card_number" label="Номер картки"
+							           rules={[{ required: true, message: 'Введіть номер картки' }]}>
+								<Input maxLength={15} />
+							</Form.Item>
+						)}
 						<Form.Item name="cust_surname" label="Прізвище"
 						           rules={[{ required: true, message: 'Введіть прізвище' }]}>
 							<Input maxLength={15} />

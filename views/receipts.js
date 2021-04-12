@@ -2,6 +2,7 @@ const db = require("../db/DB");
 const receiptsUrl = '/api/receipts';
 const auth_token = require("./auth_midd");
 const date_parse = require("./utility");
+const moment = require('moment');
 
 const jwt = require('jsonwebtoken');
 const ACCESS_TOKEN_SECRET  = "cvkhjbklit654o9p9poh1qkwlsxam"
@@ -35,13 +36,24 @@ module.exports.initReceiptsViews = function(app) {
 				let results = [];
 				for (let i=0; i<json.length; i++) {
 					let items_str = await db.receiptsDB.getProducts(json[i].check_number);
-					let receipt_data = date_parse.changeDateCheck(r);
-					let j = {
-						receipt_data,
-						"products": items_str
-					};
-					console.log(j);
-					results.push(j);
+					let items = [];
+					for (let j = 0; j < items_str.length; j++) {
+						let pr = (await db.storeProductsDB.getById(items_str[j]['store-product']))[0];
+						let pr_pr = (await db.productsDB.getById(pr.id_product))[0];
+						let pr_cat = (await db.categoriesDB.getById(pr_pr.category_number))[0];
+						pr_pr['category_number'] = pr_cat;
+						pr['id_product'] = pr_pr;
+						items.push({product: pr, count: items_str[j].count});
+					}
+					// let receipt_data = date_parse.changeDateCheck(r);
+					let obj = json[i];
+					obj['products'] = items;
+					obj['id_employee'] = (await db.employeesDB.getById(obj['id_employee']))[0];
+					obj.hasOwnProperty('card_number') && (
+						obj['card_number'] = (await db.clientsDB.getById(obj['card_number']))[0]
+					);
+					obj['print_date'] = moment(obj['print_date']).format('DD.MM.YYYY').toString();
+					results.push(obj);
 				}
 				res.json({
 					"total_pages": total_pages,
@@ -58,14 +70,26 @@ module.exports.initReceiptsViews = function(app) {
 				if (r.length) {
 					console.log(r);
 					db.receiptsDB.getProducts(req.params.check_number)
-						.then((rr) => {
+						.then(async function (rr) {
 							console.log(JSON.stringify(rr));
 							let items_str = rr;
-							let receipt_data = date_parse.changeDateCheck(r);
-							res.json({
-								receipt_data,
-								"products": items_str
-							});
+							let items = [];
+							for (let j = 0; j < items_str.length; j++) {
+								let pr = (await db.storeProductsDB.getById(items_str[j]['store-product']))[0];
+								let pr_pr = (await db.productsDB.getById(pr.id_product))[0];
+								let pr_cat = (await db.categoriesDB.getById(pr_pr.category_number))[0];
+								pr_pr['category_number'] = pr_cat;
+								pr['id_product'] = pr_pr;
+								items.push({product: pr, count: items_str[j].count});
+							}
+							let obj = r[0];
+							obj['products'] = items;
+							obj['id_employee'] = (await db.employeesDB.getById(obj['id_employee']))[0];
+							obj.hasOwnProperty('card_number') && (
+								obj['card_number'] = (await db.clientsDB.getById(obj['card_number']))[0]
+							);
+							obj['print_date'] = moment(obj['print_date']).format('DD.MM.YYYY').toString();
+							res.json(obj);
 						});
 				} else {
 					res.status(400).send({message: "Bad Request"});

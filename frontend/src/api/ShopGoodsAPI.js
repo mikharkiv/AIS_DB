@@ -1,7 +1,7 @@
 import {Api} from "./Api";
 
 export class ShopGoodsAPI {
-	static apiUrl = Api.mainUrl + 'shopgoods/';
+	static apiUrl = Api.mainUrl + 'store-products/';
 
 	static async getShopGoods(urlParams) {
 		return await Api.fetch(Api.getLink(this.apiUrl, urlParams))

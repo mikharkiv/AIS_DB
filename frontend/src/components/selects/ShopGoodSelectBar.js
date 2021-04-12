@@ -17,7 +17,7 @@ class ShopGoodAutocompleteStore {
 		this.variants = [];
 		this.state = "loading";
 		yield ShopGoodsAPI.getShopGoods({search: query}).then((r) => {
-			this.variants = r;
+			this.variants = r.results;
 		});
 		this.state = "done";
 	}

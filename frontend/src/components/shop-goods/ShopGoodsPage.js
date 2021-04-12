@@ -21,7 +21,10 @@ class ShopGoodsPageStore extends BasicListStore {
 
 	*fetch() {
 		this.state = "loading";
-		yield ShopGoodsAPI.getShopGoods(this.getQuery()).then((r) => this.data = this._prepareData(r));
+		yield ShopGoodsAPI.getShopGoods(this.getQuery()).then((r) => {
+			this.totalPages = r.total_pages;
+			this.data = this._prepareData(r.results);
+		});
 		this.state = "done";
 	}
 
@@ -29,7 +32,6 @@ class ShopGoodsPageStore extends BasicListStore {
 		console.log(data);
 		return data.map((e) => {
 			if (!e) return e;
-			e.upc_prom_id = e.upc_prom.upc;
 			e.id_product_id = e.id_product.id_product;
 			e.promotional_product_str = (e.promotional_product ? 'так' : 'ні');
 			return e;

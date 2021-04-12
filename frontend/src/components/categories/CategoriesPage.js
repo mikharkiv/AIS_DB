@@ -18,7 +18,10 @@ class CategoriesPageStore extends BasicListStore {
 
 	*fetch() {
 		this.state = "loading";
-		yield CategoriesAPI.getCategories(this.getQuery()).then((r) => this.data = r);
+		yield CategoriesAPI.getCategories(this.getQuery()).then((r) => {
+			this.totalPages = r.total_pages;
+			this.data = r.results;
+		});
 		this.state = "done";
 	}
 }

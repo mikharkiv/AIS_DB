@@ -17,7 +17,7 @@ class ReceiptAutocompleteStore {
 		this.variants = [];
 		this.state = "loading";
 		yield ReceiptsAPI.getReceipts({search: query}).then((r) => {
-			this.variants = r;
+			this.variants = r.results;
 		});
 		this.state = "done";
 	}

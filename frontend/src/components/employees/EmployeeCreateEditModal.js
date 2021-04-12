@@ -14,7 +14,8 @@ const EmployeeCreateEditModal = (props) => {
 		form.resetFields();
 		if (!props.edit) setLoading(false);
 		else EmployeesAPI.getEmployee(props.id).then((r) => {
-			if (!r) return;
+			if (!r || !r[0]) return;
+			r = r[0];
 			r.date_of_birth = moment(r.date_of_birth, "DD.MM.YYYY");
 			r.date_of_start = moment(r.date_of_start, "DD.MM.YYYY");
 			form.setFieldsValue(r);
@@ -41,6 +42,18 @@ const EmployeeCreateEditModal = (props) => {
 				isLoading ? (<LoadingIcon />) : (
 					<Form form={form}
 					      layout="vertical">
+						{!props.edit && (
+							<Form.Item name="id_employee" label="Логін"
+							           rules={[{ required: true, message: 'Введіть логін' }]}>
+								<Input maxLength={15} />
+							</Form.Item>
+						)}
+						{!props.edit && (
+							<Form.Item name="password" label="Пароль"
+							           rules={[{ required: true, message: 'Введіть пароль' }]}>
+								<Input.Password maxLength={15} />
+							</Form.Item>
+						)}
 						<Form.Item name="empl_surname" label="Прізвище"
 						           rules={[{ required: true, message: 'Введіть прізвище' }]}>
 							<Input maxLength={15} />

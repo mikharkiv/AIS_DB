@@ -18,7 +18,7 @@ class EmployeeAutocompleteStore {
 		this.variants = [];
 		this.state = "loading";
 		yield EmployeesAPI.getEmployees({search: query}).then((r) => {
-			this.variants = r;
+			this.variants = r.results;
 		});
 		this.state = "done";
 	}

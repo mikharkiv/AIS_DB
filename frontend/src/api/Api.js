@@ -2,7 +2,7 @@ import {runInAction} from "mobx";
 import {globalStores} from "../hooks/contexts";
 
 export class Api {
-	static mainUrl = 'http://localhost:8000/';
+	static mainUrl = 'http://localhost:8080/api/';
 	static post = {'method': 'POST'};
 	static put = {'method': 'PUT'};
 	static delete = {'method': 'DELETE'};

@@ -19,7 +19,10 @@ class CardsPageStore extends BasicListStore {
 
 	*fetch() {
 		this.state = "loading";
-		yield CardsAPI.getCards(this.getQuery()).then((r) => this.data = r);
+		yield CardsAPI.getCards(this.getQuery()).then((r) => {
+			this.totalPages = r.total_pages;
+			this.data = r.results;
+		});
 		this.state = "done";
 	}
 }

@@ -1,7 +1,7 @@
 import {Api} from "./Api";
 
 export class CardsAPI {
-	static apiUrl = Api.mainUrl + 'cards/';
+	static apiUrl = Api.mainUrl + 'clients/';
 
 	static async getCards(urlParams) {
 		return await Api.fetch(Api.getLink(this.apiUrl, urlParams))

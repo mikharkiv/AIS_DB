@@ -19,7 +19,10 @@ class GoodsPageStore extends BasicListStore {
 
 	*fetch() {
 		this.state = "loading";
-		yield GoodsAPI.getGoods(this.getQuery()).then((r) => this.data = this._prepareData(r));
+		yield GoodsAPI.getGoods(this.getQuery()).then((r) => {
+			this.totalPages = r.total_pages;
+			this.data = this._prepareData(r.results);
+		});
 		this.state = "done";
 	}
 

@@ -11,7 +11,7 @@ const CategoryCreateEditModal = (props) => {
 	useEffect(() => {
 		form.resetFields();
 		if (!props.edit) setLoading(false);
-		else CategoriesAPI.getCategory(props.id).then((r) => form.setFieldsValue(r));
+		else CategoriesAPI.getCategory(props.id).then((r) => form.setFieldsValue(r[0]));
 	}, [props]);
 
 	let onDelete = () => {

@@ -16,7 +16,7 @@ const updateClientSQL = "UPDATE `Check` SET #PARAMS# WHERE check_number = '#ID#'
 
 const deleteByIdSQL = "DELETE FROM `Check` WHERE check_number=#PID_VAR#;";
 
-const getProductsSQL = "SELECT id_product AS `store-product`, Sale.products_number AS count FROM Sale INNER JOIN Store_Product SP on Sale.UPC = SP.UPC WHERE Sale.check_number = #PID_VAR#;"
+const getProductsSQL = "SELECT Sale.UPC AS `store-product`, Sale.products_number AS count FROM Sale INNER JOIN Store_Product SP on Sale.UPC = SP.UPC WHERE Sale.check_number = #PID_VAR#;"
 
 module.exports.ReceiptsDB = class {
 	query;

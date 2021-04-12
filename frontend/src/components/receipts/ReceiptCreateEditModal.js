@@ -35,7 +35,8 @@ const ReceiptCreateEditModal = (props) => {
 			let r = Object.assign({}, res);
 			console.log(r);
 			r.print_date = moment(r.print_date, "DD.MM.YYYY");
-			r.card_number = {key: r.card_number.card_number, value: r.card_number.cust_surname + ' ' + r.card_number.cust_name};
+			r.card_number && (
+				r.card_number = {key: r.card_number.card_number, value: r.card_number.cust_surname + ' ' + r.card_number.cust_name});
 			setItems(r.products);
 			form.setFieldsValue(r);
 		});
@@ -126,7 +127,7 @@ const ReceiptCreateEditModal = (props) => {
 							};
 						}} pagination={false}>
 							<Table.Column dataIndex="product" title="Продукт" render={e => (
-								<>{e.upc + ' ' + e.id_product.product_name}</>
+								<>{e.UPC + ' ' + e.id_product.product_name}</>
 							)}/>
 							<Table.Column dataIndex="count" title="К-ть"/>
 						</Table>

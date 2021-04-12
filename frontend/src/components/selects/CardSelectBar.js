@@ -17,7 +17,7 @@ class CardAutocompleteStore {
 		this.variants = [];
 		this.state = "loading";
 		yield CardsAPI.getCards({search: query}).then((r) => {
-			this.variants = r;
+			this.variants = r.results;
 		});
 		this.state = "done";
 	}

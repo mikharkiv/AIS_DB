@@ -18,7 +18,7 @@ class CategoryAutocompleteStore {
 		this.variants = [];
 		this.state = "loading";
 		yield CategoriesAPI.getCategories({search: query}).then((r) => {
-			this.variants = r;
+			this.variants = r.results;
 		});
 		this.state = "done";
 	}
