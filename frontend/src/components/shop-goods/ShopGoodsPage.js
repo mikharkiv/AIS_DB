@@ -23,6 +23,7 @@ class ShopGoodsPageStore extends BasicListStore {
 		this.state = "loading";
 		yield ShopGoodsAPI.getShopGoods(this.getQuery()).then((r) => {
 			this.totalPages = r.total_pages;
+			console.log(r.results);
 			this.data = this._prepareData(r.results);
 		});
 		this.state = "done";

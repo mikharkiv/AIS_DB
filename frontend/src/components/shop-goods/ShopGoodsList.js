@@ -6,7 +6,7 @@ const ShopGoodsList = (props) => {
 		<Table dataSource={props.data} pagination={false}
 			onRow={(record, rowIndex) => {
 				return {
-					onClick: event => props.onEdit(record.upc)
+					onClick: event => props.onEdit(record.UPC)
 				};
 			}}>
 			<Table.Column dataIndex="UPC" title="#" sorter=

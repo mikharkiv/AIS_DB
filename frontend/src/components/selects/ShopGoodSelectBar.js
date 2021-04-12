@@ -58,7 +58,7 @@ const ShopGoodAutocomplete = (props) => {
 		              onChange={onChange}
 		              value={localVal.value} >
 			{ store.variants.map((e) => (
-				<AutoComplete.Option key={e.upc} value={e.upc + ' ' + e.id_product.product_name}>
+				<AutoComplete.Option key={e.UPC} value={e.UPC + ' ' + e.id_product.product_name}>
 					{e.upc + ' ' + e.id_product.product_name}
 				</AutoComplete.Option>
 			))}

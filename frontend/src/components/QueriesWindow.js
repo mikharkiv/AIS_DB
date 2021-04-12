@@ -29,7 +29,8 @@ const QueriesWindow = (props) => {
 		else for (let i = 0; i < values.length; i++) {
 			out[`par${i && i}`] = values[i];
 		}
-		QueriesAPI.query(query.id, data).then((r) => setData(r));
+		console.log(out);
+		QueriesAPI.query(query.id, out).then((r) => setData(r));
 	}
 
 	return (

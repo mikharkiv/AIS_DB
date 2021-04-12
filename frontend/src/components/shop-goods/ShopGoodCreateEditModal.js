@@ -18,8 +18,8 @@ const ShopGoodCreateEditModal = (props) => {
 		else ShopGoodsAPI.getShopGood(props.id).then((res) => {
 			if (!res) return;
 			let r = Object.assign({}, res);
-			if (res.upc_prom)
-				r.upc_prom = {key: r.upc_prom.upc, value: r.upc_prom.upc + ' ' + r.id_product.product_name};
+			if (res.UPC_prom)
+				r.upc_prom = {key: r.UPC_prom, value: r.UPC_prom};
 			r.id_product = {key: r.id_product.id_product, value: r.id_product.product_name};
 			console.log(r);
 			form.setFieldsValue(r);

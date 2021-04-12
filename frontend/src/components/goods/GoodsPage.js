@@ -27,6 +27,7 @@ class GoodsPageStore extends BasicListStore {
 	}
 
 	_prepareData(data) {
+		console.log(data);
 		return data.map((e) => {
 			e.category_name = e.category_number.category_name;
 			return e;

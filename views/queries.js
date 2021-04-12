@@ -18,6 +18,11 @@ module.exports.initQueries = function(app) {
 		let par2 = req.body.par2;
 		let par3 = req.body.par3;
 
+		if (typeof par === 'string') par = `"${par}"`;
+		if (typeof par1 === 'string') par1 = `"${par1}"`;
+		if (typeof par2 === 'string') par2 = `"${par2}"`;
+		if (typeof par3 === 'string') par3 = `"${par3}"`;
+
 		// filter date
 		console.log(typeof req.params.num);
 		if (req.params.num == 13|| req.params.num == 15 || req.params.num == 17 || req.params.num == 21) {
@@ -28,6 +33,12 @@ module.exports.initQueries = function(app) {
 			par1 = moment(par1, 'DD.MM.YYYY').format('"YYYY-MM-DD"').toString();
 			par2 = moment(par2, 'DD.MM.YYYY').format('"YYYY-MM-DD"').toString();
 		}
+
+		// par && (par = par.replace(new RegExp('\"+'), '"'));
+		// par1 && (par1 = par1.replace(new RegExp('\"+'), '"'));
+		// par2 && (par2 = par2.replace(new RegExp('\"+'), '"'));
+		// par3 && (par3 = par3.replace(new RegExp('\"+'), '"'));
+
 		par && (query = query.replace('%PAR%', par));
 		par1 && (query = query.replace('%PAR1%', par1));
 		par2 && (query = query.replace('%PAR2%', par2));
@@ -48,7 +59,6 @@ module.exports.initQueries = function(app) {
 						receipt_data,
 						"products": items_str
 					};
-					//console.log(j);
 					results.push(j);
 				}
 				res.send(results);

@@ -28,8 +28,10 @@
 					count_items = json[0].TotalCount;
 				});
 			db.productsDB.getProductsLimit(perPage, perPage * (page - 1))
-				.then((r) => {
-
+				.then(async function (r) {
+					for (let i = 0; i < r.length; ++i) {
+						r[i]['category_number'] = (await db.categoriesDB.getById(r[i]['category_number']))[0];
+					}
 					//const count_items = r.count;
 					const total_pages = Math.ceil(count_items / perPage);
 					const results = r;
@@ -52,7 +54,7 @@
 						db.categoriesDB.getById(json[0].category_number)
 							.then((rr) => {
 								if (rr.length) {
-									json[0].category_number = rr;
+									json[0].category_number = rr[0];
 									console.log(json[0]);
 									res.send(json[0]);
 								}

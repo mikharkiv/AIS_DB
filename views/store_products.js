@@ -18,33 +18,28 @@ module.exports.initStoreProductsViews = function(app) {
 				let string = JSON.stringify(r);
 				let json = JSON.parse(string);
 				count_items = json[0].TotalCount;
-			});
-		db.storeProductsDB.getStoreProductsLimit(perPage, perPage * (page - 1))
-			.then(async (r) => {
-				const total_pages = Math.ceil(count_items / perPage);
-				if (count_items > perPage) {
-					count_items = count_items - perPage * (page - 1);
-				}
-				let string = JSON.stringify(r);
-				let json = JSON.parse(string);
-				for (let i=0; i<json.length; i++) {
-					db.productsDB.getById(json[0].id_product)
-						.then((rr) => {
-							if (rr.length) {
-								json[i].id_product = rr;
-							}
+				db.storeProductsDB.getStoreProductsLimit(perPage, perPage * (page - 1))
+					.then(async (r) => {
+						const total_pages = Math.ceil(count_items / perPage);
+						if (count_items > perPage) {
+							count_items = count_items - perPage * (page - 1);
+						}
+						let string = JSON.stringify(r);
+						let json = JSON.parse(string);
+						for (let i=0; i<json.length; i++) {
+							json[i].id_product = (await db.productsDB.getById(json[i].id_product))[0];
+						}
+						res.json({
+							"total_pages": total_pages,
+							"count_items": count_items,
+							"results": json
 						});
-				}
-				res.json({
-					"total_pages": total_pages,
-					"count_items": count_items,
-					"results": json
-				});
+					});
 			});
 	});
 
-	app.get(storeProductsUrl + '/:UPC', auth_token.authManager, function (req, res) {
-		db.storeProductsDB.getById(req.params.UPC)
+	app.get(storeProductsUrl + '/:upc', auth_token.authManager, function (req, res) {
+		db.storeProductsDB.getById(req.params.upc)
 			.then((r) => {
 				if (r.length) {
 					//console.log(r);
@@ -53,7 +48,7 @@ module.exports.initStoreProductsViews = function(app) {
 					db.productsDB.getById(json[0].id_product)
 						.then((rr) => {
 							if (rr.length) {
-								json[0].id_product = rr;
+								json[0].id_product = rr[0];
 								console.log(json[0]);
 								res.send(json[0]);
 							}
