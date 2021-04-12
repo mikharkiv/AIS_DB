@@ -23,12 +23,26 @@ module.exports.initReceiptsViews = function(app) {
 				count_items = json[0].TotalCount;
 			});
 		db.receiptsDB.getReceiptLimit(perPage, perPage * (page - 1))
-			.then((r) => {
+			.then(async function (r) {
 				const total_pages = Math.ceil(count_items / perPage);
 				if (count_items > perPage) {
 					count_items = count_items - perPage * (page - 1);
 				}
-				const results = date_parse.changeDateCheckArray(r);
+				//const results = date_parse.changeDateCheckArray(r);
+				//additional info
+				let string = JSON.stringify(r);
+				let json = JSON.parse(string);
+				let results = [];
+				for (let i=0; i<json.length; i++) {
+					let items_str = await db.receiptsDB.getProducts(json[i].check_number);
+					let receipt_data = date_parse.changeDateCheck(r);
+					let j = {
+						receipt_data,
+						"products": items_str
+					};
+					console.log(j);
+					results.push(j);
+				}
 				res.json({
 					"total_pages": total_pages,
 					"count_items": count_items,
@@ -43,7 +57,16 @@ module.exports.initReceiptsViews = function(app) {
 			.then((r) => {
 				if (r.length) {
 					console.log(r);
-					res.send(date_parse.changeDateCheck(r));
+					db.receiptsDB.getProducts(req.params.check_number)
+						.then((rr) => {
+							console.log(JSON.stringify(rr));
+							let items_str = rr;
+							let receipt_data = date_parse.changeDateCheck(r);
+							res.json({
+								receipt_data,
+								"products": items_str
+							});
+						});
 				} else {
 					res.status(400).send({message: "Bad Request"});
 				}
@@ -69,17 +92,26 @@ module.exports.initReceiptsViews = function(app) {
 							return res.status(401).send({message: "Unauthorized"});
 						}
 						req.user = user;
-						console.log(req.user.id)
+
 					db.receiptsDB.addReceipt(req.body.check_number, req.user.id, req.body.card_number, req.body.print_date, req.body.sum_total)
 						.then((r) => {
 							if (!r.affectedRows) {
 								res.status(400).send({message: "Bad Request"});
 							} else {
 								console.log(r);
+								//additional info
 								db.receiptsDB.getById(req.body.check_number)
 									.then((rr) => {
-										console.log(rr);
-										res.send(date_parse.changeDateCheck(rr));
+										db.receiptsDB.getProducts(req.body.check_number)
+											.then((rrr) => {
+												console.log(JSON.stringify(rrr));
+												let items_str = rrr;
+												let receipt_data = date_parse.changeDateCheck(rr);
+												res.json({
+													receipt_data,
+													"products": items_str
+												});
+											});
 									});
 							}
 						});
@@ -91,9 +123,7 @@ module.exports.initReceiptsViews = function(app) {
 
 	app.put(receiptsUrl + '/:check_number', auth_token.authenticateToken, function (req, res) {
 		let json = JSON.parse(JSON.stringify(req.body));
-
 		let attribute_arr = ["check_number", "id_employee", "card_number", "print_date", "sum_total"];
-
 		let query_part = [];
 		for (let key of attribute_arr) {
 			if (json[key] !== undefined) {
@@ -110,8 +140,16 @@ module.exports.initReceiptsViews = function(app) {
 					console.log(r);
 					db.receiptsDB.getById(req.params.check_number)
 						.then((rr) => {
-							console.log(rr);
-							res.send(date_parse.changeDateCheck(rr));
+							db.receiptsDB.getProducts(req.params.check_number)
+								.then((rrr) => {
+									console.log(JSON.stringify(rrr));
+									let items_str = rrr;
+									let receipt_data = date_parse.changeDateCheck(rr);
+									res.json({
+										receipt_data,
+										"products": items_str
+									});
+								});
 						});
 				}});
 	});

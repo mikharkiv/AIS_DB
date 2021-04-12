@@ -46,7 +46,7 @@ function changeDateCheck(response) {
 	//DD.MM.YYYY
 	let print_date_format = moment(print_date,'YYYY-MM-DD HH:mm:ss ZZ').format('DD.MM.YYYY');
 	json[0].print_date = print_date_format;
-	return JSON.stringify(json);
+	return json;
 }
 
 function changeDateCheckArray(response_array){
