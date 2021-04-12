@@ -66,10 +66,21 @@ module.exports.initStoreProductsViews = function(app) {
 
 
 	app.post(storeProductsUrl + '/', auth_token.authManager, function (req, res) {
-		//check if we try to dublicate PK upc
 		if(req.body.UPC != req.body.UPC_prom){
 			res.status(400).send({message: "Bad Request"});
 		}
+		//check if we try to dublicate PK upc
+		db.storeProductsDB.countIdProduct(req.body.id_product)
+			.then((r) => {
+				let string = JSON.stringify(r);
+				let json = JSON.parse(string);
+				count_items = json[0].TotalCount;
+				console.log(count_items);
+				if (count_items >= 2) {
+					res.status(400).send({message: "Bad Request"});
+				}else{
+
+
 		db.storeProductsDB.getAllCountByID(req.body.UPC)
 			.then((r) => {
 				let string = JSON.stringify(r);
@@ -103,8 +114,9 @@ module.exports.initStoreProductsViews = function(app) {
 						});
 				}
 			});
+				}
 	});
-
+});
 
 	app.put(storeProductsUrl + '/:UPC', auth_token.authManager, function (req, res) {
 		let json = JSON.parse(JSON.stringify(req.body));
