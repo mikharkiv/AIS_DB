@@ -47,7 +47,16 @@
 				.then((r) => {
 					if (r.length) {
 						console.log(r);
-						res.send(JSON.stringify(r));
+						let string = JSON.stringify(r);
+						let json = JSON.parse(string);
+						db.categoriesDB.getById(json[0].category_number)
+							.then((rr) => {
+								if (rr.length) {
+									json[0].category_number = rr;
+									console.log(json[0]);
+									res.send(json[0]);
+								}
+							});
 					} else {
 						res.status(400).send({message: "Bad Request"});
 					}
@@ -68,7 +77,16 @@
 							db.productsDB.getById(r.insertId)
 								.then((rr) => {
 									console.log(rr);
-									res.send(JSON.stringify(rr));
+									let string = JSON.stringify(rr);
+									let json = JSON.parse(string);
+									db.categoriesDB.getById(json[0].category_number)
+										.then((rrr) => {
+											if (rr.length) {
+												json[0].category_number = rrr;
+												console.log(json[0]);
+												res.send(json[0]);
+											}
+										});
 								});
 						}
 					});
@@ -98,7 +116,17 @@
 						db.productsDB.getById(req.params.productId)
 							.then((rr) => {
 								console.log(rr);
-								res.send(JSON.stringify(rr));
+
+								let string = JSON.stringify(rr);
+								let json = JSON.parse(string);
+								db.categoriesDB.getById(json[0].category_number)
+									.then((rrr) => {
+										if (rr.length) {
+											json[0].category_number = rrr;
+											console.log(json[0]);
+											res.send(json[0]);
+										}
+									});
 							});
 					}
 				});
