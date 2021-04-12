@@ -1,5 +1,5 @@
 const db = require("../db/DB");
-const receiptsUrl = '/receipts';
+const receiptsUrl = '/api/receipts';
 const auth_token = require("./auth_midd");
 const date_parse = require("./utility");
 

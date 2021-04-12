@@ -1,6 +1,6 @@
 const db = require("../db/DB");
 
-const categoriesUrl = '/categories';
+const categoriesUrl = '/api/categories';
 
 const auth_token = require("./auth_midd");
 

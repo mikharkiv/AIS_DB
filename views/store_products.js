@@ -1,5 +1,5 @@
 const db = require("../db/DB");
-const storeProductsUrl = '/store-products';
+const storeProductsUrl = '/api/store-products';
 const auth_token = require("./auth_midd");
 
 module.exports.initStoreProductsViews = function(app) {

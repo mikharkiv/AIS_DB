@@ -1,5 +1,5 @@
 const db = require("../db/DB");
-const clientsUrl = '/clients';
+const clientsUrl = '/api/clients';
 
 const auth_token = require("./auth_midd");
 const data_parse = require("./utility");

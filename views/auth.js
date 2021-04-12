@@ -10,7 +10,7 @@ const REFRESH_TOKEN_SECRET = "chjwkcgvwhkery2i38o2hdaksv18y"
 
 module.exports.initAuthViews = function(app) {
 
-	app.post('/login', function (req, res) {
+	app.post('/api/login', function (req, res) {
 
 		const id = req.body.empl_id;
 		const password = req.body.empl_pass;
@@ -39,7 +39,7 @@ module.exports.initAuthViews = function(app) {
 	});
 
 
-	app.get('/me', function (req, res) {
+	app.get('/api/me', function (req, res) {
 		const authHeader = req.headers['authorization']
 		const token = authHeader && authHeader.split(' ')[1]
 		console.log(token); //

@@ -1,7 +1,7 @@
 const db = require("../db/DB");
 const queries = require('../db/DBRequests').queries;
 
-const queriesUrl = '/queries';
+const queriesUrl = '/api/queries';
 const moment = require('moment');
 const date_parse = require("./utility");
 
@@ -41,13 +41,14 @@ module.exports.initQueries = function(app) {
 				let json = JSON.parse(string);
 				let results = [];
 				for (let i=0; i<json.length; i++) {
+					console.log(json[i])
 					let items_str = await db.receiptsDB.getProducts(json[i].check_number);
 					let receipt_data = date_parse.changeDateCheck(r);
 					let j = {
 						receipt_data,
 						"products": items_str
 					};
-					console.log(j);
+					//console.log(j);
 					results.push(j);
 				}
 				res.send(results);

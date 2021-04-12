@@ -1,5 +1,5 @@
 const db = require("../db/DB");
-const employeesUrl = "/employees";
+const employeesUrl = "/api/employees";
 
 const moment = require("moment");
 const auth_token = require("./auth_midd");
