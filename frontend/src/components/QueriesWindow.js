@@ -6,6 +6,7 @@ import ReceiptAutocomplete from "./selects/ReceiptSelectBar";
 import EmployeeAutocomplete from "./selects/EmployeeSelectBar";
 import GoodAutocomplete from "./selects/GoodSelectBar";
 import ShopGoodAutocomplete from "./selects/ShopGoodSelectBar";
+import {QueriesAPI} from "../api/QueriesAPI";
 
 const moment = require('moment');
 
@@ -28,7 +29,7 @@ const QueriesWindow = (props) => {
 		else for (let i = 0; i < values.length; i++) {
 			out[`par${i && i}`] = values[i];
 		}
-		// TODO
+		QueriesAPI.query(query.id, data).then((r) => setData(r));
 	}
 
 	return (

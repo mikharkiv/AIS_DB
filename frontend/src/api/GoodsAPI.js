@@ -1,57 +1,37 @@
 import {Api} from "./Api";
-import {CategoriesAPI} from "./CategoriesAPI";
 
-// TODO bind with backend
 export class GoodsAPI {
 	static apiUrl = Api.mainUrl + 'goods/';
 
-	static _goods = [
-		GoodsAPI.buildGood(0, CategoriesAPI._categories[0],'A','A'),
-		GoodsAPI.buildGood(1, CategoriesAPI._categories[0],'B','B'),
-		GoodsAPI.buildGood(2, CategoriesAPI._categories[1],'C','C'),
-		GoodsAPI.buildGood(3, CategoriesAPI._categories[1],'D','D'),
-		GoodsAPI.buildGood(4, CategoriesAPI._categories[1],'E','E'),
-	];
-
 	static async getGoods(urlParams) {
-		return this._goods;
+		return await Api.fetch(Api.getLink(this.apiUrl, urlParams))
+			.then((r) => r.json())
+			.catch(() => "error");
 	}
 
 	static async getGood(id) {
-		return this._goods.find((e) => e.id_product == id);
+		return await Api.fetch(`${this.apiUrl}${id}/`)
+			.then((r) => r.json())
+			.catch(() => "error");
 	}
 
 	static async addGood(good) {
-		let greatestId = this._goods.reduce((p,c) => Math.max(p, c.id_product), 0);
-		good.id_product = greatestId + 1;
-		if (typeof good.category_number !== 'object')
-			CategoriesAPI.getCategory(good.category_number).then((r) => {
-				good.category_number = r;
-				this._goods.push(good);
-			});
+		return await Api.fetch(`${this.apiUrl}`,
+			Object.assign({}, Api.postJson, {body: JSON.stringify(good)}))
+			.then((r) => r.json())
+			.catch(() => "error");
 	}
 
 	static async removeGood(id) {
-		this._goods = this._goods.filter((e) => e.id_product !== id);
+		return await Api.fetch(`${this.apiUrl}${id}/`, Api.delete)
+			.then((r) => (r.status === 204 ? {} : "error"))
+			.catch(() => "error");
 	}
 
 	static async updateGood(id, good) {
-		await GoodsAPI.removeGood(id);
-		good.id_product = id;
-		if (typeof good.category_number !== 'object')
-			CategoriesAPI.getCategory(good.category_number).then((r) => {
-				good.category_number = r;
-				this._goods.push(good);
-			});
-		this._goods.push(good);
-	}
-
-	static buildGood(id, category, name, characteristics) {
-		return {
-			id_product: id,
-			category_number: category,
-			product_name: name,
-			characteristics: characteristics
-		};
+		return await Api.fetch(`${this.apiUrl}${id}/`,
+			Object.assign({}, Api.putJson, {body: JSON.stringify(good)}))
+			.then((r) => r.json())
+			.catch(() => "error");
 	}
 }

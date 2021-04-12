@@ -10,6 +10,7 @@ import {ReceiptsAPI} from "../../api/ReceiptsAPI";
 import ReceiptCreateEditModal from "./ReceiptCreateEditModal";
 import EmployeeAutocomplete from "../selects/EmployeeSelectBar";
 import {Api} from "../../api/Api";
+import {QueriesAPI} from "../../api/QueriesAPI";
 
 class ReceiptsPageStore extends BasicListStore {
 
@@ -22,13 +23,8 @@ class ReceiptsPageStore extends BasicListStore {
 		this.state = "loading";
 		if (!query)
 			yield ReceiptsAPI.getReceipts(this.getQuery()).then((r) => this.data = this._prepareData(r));
-		else if (query.id === 13) {
-			yield Api.fetch(Api.mainUrl + 'queries/13',
-				Object.assign({}, Api.postJson, data)).then((r) => this.data = this._prepareData(r));
-		} else if (query.id === 14) {
-			yield Api.fetch(Api.mainUrl + 'queries/14',
-				Object.assign({}, Api.postJson, data)).then((r) => this.data = this._prepareData(r));
-		}
+		else if (query.id == 13 || query.id == 14)
+			yield QueriesAPI.query(query.id, data).then((r) => this.data = this._prepareData(r));
 		this.state = "done";
 	}
 
